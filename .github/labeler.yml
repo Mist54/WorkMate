@@ -1,0 +1,27 @@
+# .github/labeler.yml
+
+# Labels for the head branch (the branch being merged)
+adhi:
+  - head-branch: 'feature/adhi'
+
+sankalp:
+  - head-branch: 'feature/sankalp'
+
+sushmita:
+  - head-branch: 'feature/sushmita'
+
+srujan:
+  - head-branch: 'feature/srujan'
+
+feature:
+  - head-branch: '^feature/' # Matches any branch starting with 'feature/'
+
+# Labels for the base branch (the branch the PR is being merged into)
+develop:
+  - base-branch: 'develop'
+
+master:
+  - base-branch: 'master'
+
+main: # Assuming 'master' might also be called 'main' in some repos, include it for completeness
+  - base-branch: 'main'

@@ -1,0 +1,42 @@
+# .github/workflows/pr-title-check.yml
+name: PR Title Check
+
+on:
+  pull_request:
+    # This workflow runs when a pull request is opened,
+    # edited (e.g., title changed), synchronized (new commits pushed),
+    # or reopened.
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate_pr_title:
+    runs-on: ubuntu-latest
+    permissions:
+      # Required for the action to be able to set a status check on the PR
+      pull-requests: write
+
+    steps:
+      - name: Validate PR title with Conventional Commits
+        # Uses a popular action designed for this purpose
+        uses: amannn/action-semantic-pull-request@v5 # Using v5, adjust if a newer stable version is available
+
+        env:
+          # The GITHUB_TOKEN is automatically provided by GitHub Actions
+          # and gives the action necessary permissions to interact with the PR.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        with:
+          # Optional: Customize the allowed types if your convention differs
+          # from the full Conventional Commits specification.
+          # If not specified, it defaults to common types like feat, fix, docs, chore, etc.
+          # Example:
+          # types: 'feat, fix, docs, chore, style, refactor, perf, test, build, ci'
+
+          # Optional: Customize the message displayed when the check fails.
+          # message: 'Your PR title must follow the Conventional Commits specification. Example: `feat: Add user login functionality`.'
+
+          # Optional: Whether to consider the PR as a "squash merge" or "rebase merge"
+          # for its title check. Defaults to 'true'.
+          # If 'false', it will validate based on the actual merge commit message
+          # which is often the PR title if not explicitly changed during merge.
+          # validate-merge-strategy: true
