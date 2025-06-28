@@ -22,6 +22,9 @@ jobs:
       - name: Check token scopes
         run: |
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -I https://api.github.com/user
+      - name: Check GITHUB_TOKEN permissions
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/rate_limit
 
       - name: Validate commit messages
         uses: commit-check/commit-check-action@v0.6.1
