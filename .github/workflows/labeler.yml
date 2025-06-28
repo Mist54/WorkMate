@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      labels: write
     steps:
       - uses: actions/checkout@v4
       - name: Auto Label PR
