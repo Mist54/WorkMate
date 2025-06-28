@@ -31,10 +31,32 @@ jobs:
         id: fork_check
         run: |
           echo "IS_FORK=$(jq -r '.pull_request.head.repo.fork' $GITHUB_EVENT_PATH)" >> $GITHUB_OUTPUT
+      - name: Check token permissions
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/commits
+
+      - name: Validate commit messages test
+        if: ${{ steps.fork_check.outputs.IS_FORK == 'false' }}
+        run: |
+          pip install commit-check==0.9.5
+          commit-check --message --branch --author-name --author-email --commit-signoff || {
+            status=$?
+            echo "Commit-check exited with code $status."
+            if [[ $status -eq 5 ]] || [[ $status -eq 4 ]] || grep -q "KeyError:'checks'" /home/runner/.cache/commit-check/commit-check.log; then
+              echo "Detected PR comment failure or checks KeyError. Continuing without failure."
+              exit 0
+            fi
+            exit $status
+          }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_CHECK_DEBUG: true
 
       - name: Validate commit messages
         if: ${{ steps.fork_check.outputs.IS_FORK == 'false' }}
-        uses: commit-check/commit-check-action@v0.6.1
+        uses: commit-check/commit-check-action@v0.9.5
         with:
           message: true
           pr-comments: true
