@@ -1,0 +1,152 @@
+﻿@model WorkMate.ViewModels.TestCaseViewModel
+@{
+    ViewBag.Title = "index";
+}
+@Html.AntiForgeryToken()
+<div class="container-fluid">
+    <div class="row">
+    
+        <div class="col-lg-6 col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>Test Case Generator
+                    </h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="mb-4">
+                        <h6 class="text-muted border-bottom pb-2 mb-3">Task Information</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.TaskId, new { htmlAttributes = new { @class = "form-control", placeholder = "Task ID" } })
+                                    @Html.LabelFor(m => m.TaskId)
+                                    @Html.ValidationMessageFor(m => m.TaskId, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.TaskName, new { htmlAttributes = new { @class = "form-control", placeholder = "Task Name" } })
+                                    @Html.LabelFor(m => m.TaskName)
+                                    @Html.ValidationMessageFor(m => m.TaskName, "", new { @class = "text-danger small" })
+                                    <small class="text-muted">eg: Task01, Task02, Task-01, etc. </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Test Case Details Section -->
+                    <div class="mb-4">
+                        <h6 class="text-muted border-bottom pb-2 mb-3">Test Case Details</h6>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.TestCaseName, new { htmlAttributes = new { @class = "form-control", placeholder = "Test Case Name" } })
+                                    @Html.LabelFor(m => m.TestCaseName)
+                                    @Html.ValidationMessageFor(m => m.TestCaseName, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.Preconditions, new { htmlAttributes = new { @class = "form-control", placeholder = "Preconditions" } })
+                                    @Html.LabelFor(m => m.Preconditions)
+                                    @Html.ValidationMessageFor(m => m.Preconditions, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.Steps, new { htmlAttributes = new { @class = "form-control", placeholder = "Test Steps" } })
+                                    @Html.LabelFor(m => m.Steps)
+                                    @Html.ValidationMessageFor(m => m.Steps, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.ExpectedResult, new { htmlAttributes = new { @class = "form-control", placeholder = "Expected Result" } })
+                                    @Html.LabelFor(m => m.ExpectedResult)
+                                    @Html.ValidationMessageFor(m => m.ExpectedResult, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.ActualResult, new { htmlAttributes = new { @class = "form-control", placeholder = "Actual Result" } })
+                                    @Html.LabelFor(m => m.ActualResult)
+                                    @Html.ValidationMessageFor(m => m.ActualResult, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    @Html.EditorFor(m => m.Notes, new { htmlAttributes = new { @class = "form-control", placeholder = "Notes" } })
+                                    @Html.LabelFor(m => m.Notes)
+                                    @Html.ValidationMessageFor(m => m.Notes, "", new { @class = "text-danger small" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Test Configuration Section -->
+                    <div class="mb-4">
+                        <h6 class="text-muted border-bottom pb-2 mb-3">Test Configuration</h6>
+                        <div class="row g-3">
+                            <div class="col-4">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.Type)</label>
+                                @Html.EnumDropDownListFor(m => m.Type, new { @class = "form-select select2" })
+                                @Html.ValidationMessageFor(m => m.Type, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.Priority)</label>
+                                @Html.EnumDropDownListFor(m => m.Priority, new { @class = "form-select select2" })
+                                @Html.ValidationMessageFor(m => m.Priority, "", new { @class = "text-danger small" })
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">@Html.DisplayNameFor(m => m.TestCaseStatus)</label>
+                                @Html.EnumDropDownListFor(m => m.TestCaseStatus, new { @class = "form-select select2" })
+                                @Html.ValidationMessageFor(m => m.TestCaseStatus, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button class="btn btn-outline-secondary" id="btnClearForm" type="button">
+                            <i class="fas fa-eraser me-1"></i>Clear Form
+                        </button>
+                        <button class="btn btn-primary" id="btnSaveToTable" type="button">
+                            <i class="fas fa-save me-1"></i>Save Test Case
+                        </button>
+                        <button class="btn btn-warning" id="btnGenerateTestCase">Generate testcase files</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Table -->
+        <div class="col-lg-6 col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-table me-2"></i>Test Cases List
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="height: 650px; overflow-y: auto;" id="TestCaseTable">
+                        <!-- Auto generated table will be set here -->
+                        <div class="d-flex align-items-center justify-content-center" style="height: 400px;">
+                            <div class="text-center text-muted">
+                                <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                                <p class="mb-0">No test cases created yet</p>
+                                <small>Fill out the form and click "Save Test Case" to get started</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Scripts/TestCaseIndex.js"></script>
+}
