@@ -1,14 +1,6 @@
 checks:
-  message:
-    preset: conventional-commits
-    types:
-      - feat
-      - fix
-      - docs
-      - chore
-      - style
-      - refactor
-      - perf
-      - test
-      - build
-      - ci
+  - check: message_type
+    regex: '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)$'
+    error: "The commit message type is invalid. It should be one of the following:\n
+    build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test"
+    suggest: git commit --amend --no-verify
