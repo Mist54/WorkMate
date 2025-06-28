@@ -50,3 +50,8 @@ jobs:
       - name: Skip commit message validation on forked PRs
         if: ${{ steps.fork_check.outputs.IS_FORK == 'true' }}
         run: echo "Skipping commit check on forked PR due to permission restrictions."
+      - name: Print commit-check error log
+        if: failure()
+        run: |
+          echo "Dumping commit-check.log:"
+          cat /home/runner/.cache/commit-check/commit-check.log || echo "Log file not found"
