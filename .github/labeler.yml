@@ -1,27 +1,33 @@
-# .github/labeler.yml
+# ===============================
+# Head Branch Labeling (source branch)
+# ===============================
 
-# Labels for the head branch (the branch being merged)
+# Individual developer labels
 adhi:
-  - head-branch: 'feature/adhi'
+  - head-branch: '^feature/adhi$'
 
 sankalp:
-  - head-branch: 'feature/sankalp'
+  - head-branch: '^feature/sankalp$'
 
-sushmita:
-  - head-branch: 'feature/sushmita'
+sushmitha:
+  - head-branch: '^feature/sushmitha$'
 
-srujan:
-  - head-branch: 'feature/srujan'
+shrujan:
+  - head-branch: '^feature/shrujan$'
 
+# Generic feature branch label
 feature:
-  - head-branch: '^feature/' # Matches any branch starting with 'feature/'
+  - head-branch: '^feature/.*'
 
-# Labels for the base branch (the branch the PR is being merged into)
+# ===============================
+# Base Branch Labeling (target branch)
+# ===============================
+
 develop:
-  - base-branch: 'develop'
+  - base-branch: '^develop$'
 
 master:
-  - base-branch: 'master'
+  - base-branch: '^master$'
 
-main: # Assuming 'master' might also be called 'main' in some repos, include it for completeness
-  - base-branch: 'main'
+main:
+  - base-branch: '^main$'
