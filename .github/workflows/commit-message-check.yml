@@ -9,33 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      name: Commit Message Check
-
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-
-jobs:
-  validate_commits:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
       issues: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Validate commit messages
-        uses: commit-check/commit-check-action@v0.6.1
-        with:
-          message: true
-          pr-comments: true  # enable PR comments (optional)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 
     steps:
       - name: Checkout code
