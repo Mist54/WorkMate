@@ -20,4 +20,6 @@ jobs:
         uses: commit-check/commit-check-action@v0.6.1
         with:
           message: true
-          # branch: true  # optional: enable branch checks too
+          pr-comments: true  # enable PR comments (optional)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
