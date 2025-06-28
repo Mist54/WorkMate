@@ -7,7 +7,7 @@ on:
 permissions:
   contents: read
   issues: write
-  pull-requests: write  # add this
+  pull-requests: write
 
 jobs:
   validate_commits:
@@ -23,5 +23,6 @@ jobs:
         uses: commit-check/commit-check-action@v0.6.1
         with:
           message: true
-          pr-comments: true  # enable PR comments
-          github_token: ${{ secrets.PAT_TOKEN }}  # pass the token here as input
+          pr-comments: true
+          # Use the built-in GITHUB_TOKEN instead of a PAT
+          github_token: ${{ secrets.GITHUB_TOKEN }}
