@@ -41,7 +41,6 @@ jobs:
         if: ${{ steps.fork_check.outputs.IS_FORK == 'false' }}
         uses: commit-check/commit-check-action@v0.6.1
         with:
-          message: true
           pr-comments: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

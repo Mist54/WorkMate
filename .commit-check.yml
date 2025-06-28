@@ -1,41 +1,39 @@
 # .commit-check.yml
 # Configuration for commit-check/commit-check-action
 
-# Rules for commit message formatting
-message:
-  # Use 'conventional-commits' preset for standard semantic commit messages
-  preset: conventional-commits
+checks:
+  message:
+    # Use 'conventional-commits' preset for standard semantic commit messages
+    preset: conventional-commits
 
-  # Optional: Customize the types and scopes if your team has specific requirements
-  # types:
-  #   - feat
-  #   - fix
-  #   - docs
-  #   - chore
-  #   - style
-  #   - refactor
-  #   - perf
-  #   - test
-  #   - build
-  #   - ci
-  # scopes:
-  #   - api
-  #   - ui
-  #   - db
-  #   - auth
+    # Optional: Customize the types and scopes if your team has specific requirements
+    # types:
+    #   - feat
+    #   - fix
+    #   - docs
+    #   - chore
+    #   - style
+    #   - refactor
+    #   - perf
+    #   - test
+    #   - build
+    #   - ci
+    # scopes:
+    #   - api
+    #   - ui
+    #   - db
+    #   - auth
 
-  # Optional: Define a maximum length for the first line (header) of the commit message
-  # header-max-length: 72
+    # Optional: Define a maximum length for the first line (header) of the commit message
+    # header-max-length: 72
 
-  # Optional: Require a blank line between header and body
-  # header-body-blank-line: true
+    # Optional: Require a blank line between header and body
+    # header-body-blank-line: true
 
-  # Optional: Define a maximum length for body lines
-  # body-max-length: 100
+    # Optional: Define a maximum length for body lines
+    # body-max-length: 100
 
-# Optional: Rules for branch naming convention
-# branch:
-#   # Example pattern: Enforce branches start with common types followed by a descriptive name
-#   # e.g., 'feature/my-new-feature', 'bugfix/issue-123'
-#   pattern: '^(feat|fix|docs|chore|style|refactor|perf|test|build|ci|bugfix|hotfix|release)\/[a-zA-Z0-9_.-]+$'
-#   error: 'Branch name must follow a convention like `feature/my-feature` or `bugfix/issue-123`.'
+  # Optional: Rules for branch naming convention
+  # branch:
+  #   pattern: '^(feat|fix|docs|chore|style|refactor|perf|test|build|ci|bugfix|hotfix|release)\/[a-zA-Z0-9_.-]+$'
+  #   error: 'Branch name must follow a convention like `feature/my-feature` or `bugfix/issue-123`.'
