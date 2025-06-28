@@ -56,7 +56,7 @@ jobs:
 
       - name: Validate commit messages
         if: ${{ steps.fork_check.outputs.IS_FORK == 'false' }}
-        uses: commit-check/commit-check-action@v0.9.5
+        uses: commit-check/commit-check-action@v0.8.0
         with:
           message: true
           pr-comments: true
