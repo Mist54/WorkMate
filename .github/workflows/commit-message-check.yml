@@ -21,7 +21,7 @@ jobs:
 
       - name: Validate commit messages
         # Uses an action designed for various commit checks
-        uses: commit-check/commit-check-action@v5 # Using v5, adjust if a newer stable version is available
+        uses: commit-check/commit-check-action@v4 # Using v5, adjust if a newer stable version is available
         with:
           # Set this to 'true' to enable commit message validation based on .commit-check.yml
           message: true
