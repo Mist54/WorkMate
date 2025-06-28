@@ -9,9 +9,9 @@ jobs:
   label:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
-      labels: write
+      
     steps:
       - uses: actions/checkout@v4
       - name: Auto Label PR
