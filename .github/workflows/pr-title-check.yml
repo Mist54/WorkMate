@@ -24,19 +24,3 @@ jobs:
           # The GITHUB_TOKEN is automatically provided by GitHub Actions
           # and gives the action necessary permissions to interact with the PR.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        with:
-          # Optional: Customize the allowed types if your convention differs
-          # from the full Conventional Commits specification.
-          # If not specified, it defaults to common types like feat, fix, docs, chore, etc.
-          # Example:
-          # types: 'feat, fix, docs, chore, style, refactor, perf, test, build, ci'
-
-          # Optional: Customize the message displayed when the check fails.
-          # message: 'Your PR title must follow the Conventional Commits specification. Example: `feat: Add user login functionality`.'
-
-          # Optional: Whether to consider the PR as a "squash merge" or "rebase merge"
-          # for its title check. Defaults to 'true'.
-          # If 'false', it will validate based on the actual merge commit message
-          # which is often the PR title if not explicitly changed during merge.
-          # validate-merge-strategy: true
