@@ -7,6 +7,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write  # add this
 
 jobs:
   validate_commits:
@@ -23,5 +24,4 @@ jobs:
         with:
           message: true
           pr-comments: true  # enable PR comments
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          github_token: ${{ secrets.PAT_TOKEN }}  # pass the token here as input
