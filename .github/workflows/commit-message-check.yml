@@ -19,11 +19,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check token scopes
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -I https://api.github.com/user
+
       - name: Validate commit messages
         uses: commit-check/commit-check-action@v0.6.1
         with:
           message: true
           pr-comments: true
-        env: # <--- Add this 'env' block
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMIT_CHECK_DEBUG: true
