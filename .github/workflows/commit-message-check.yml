@@ -1,31 +1,23 @@
-# .github/workflows/commit-message-check.yml
 name: Commit Message Check
 
 on:
   pull_request:
-    # Trigger on PR opened, new commits pushed, or PR reopened
     types: [opened, synchronize, reopened]
 
 jobs:
   validate_commits:
     runs-on: ubuntu-latest
     permissions:
-      contents: read # Required to checkout the code and read commit messages
+      contents: read
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # Important: Fetch all history for accurate commit message validation
           fetch-depth: 0
 
       - name: Validate commit messages
-        # Uses an action designed for various commit checks
-        uses: commit-check/commit-check-action@v4 # Using v5, adjust if a newer stable version is available
+        uses: commit-check/commit-check-action@v0.6.1
         with:
-          # Set this to 'true' to enable commit message validation based on .commit-check.yml
           message: true
-
-          # Optional: If you want to enforce a branch naming pattern too
-          # (you'll define this in .commit-check.yml as well)
-          # branch: true
+          # branch: true  # optional: enable branch checks too
