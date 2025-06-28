@@ -4,12 +4,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   validate_commits:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      issues: write
 
     steps:
       - name: Checkout code
@@ -21,6 +22,6 @@ jobs:
         uses: commit-check/commit-check-action@v0.6.1
         with:
           message: true
-          pr-comments: true  # enable PR comments (optional)
+          pr-comments: true  # enable PR comments
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
