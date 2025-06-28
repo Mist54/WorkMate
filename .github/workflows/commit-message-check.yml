@@ -25,4 +25,5 @@ jobs:
           message: true
           pr-comments: true
         env: # <--- Add this 'env' block
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }} # <--- Pass the token as an environment variable
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          COMMIT_CHECK_DEBUG: true
