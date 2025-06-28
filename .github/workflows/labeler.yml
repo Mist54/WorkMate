@@ -19,3 +19,5 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           # Optional: Specify the path to your labeler configuration file if it's not .github/labeler.yml
           # configuration-path: .github/my-custom-label-config.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
