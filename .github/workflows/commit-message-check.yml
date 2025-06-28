@@ -6,8 +6,8 @@ on:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
+  issues: write      # needed for commenting on PRs
+  pull-requests: write  # for PR-related operations
 
 jobs:
   validate_commits:
@@ -19,14 +19,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check token scopes
+      - name: Check token scopes (read user info)
         run: |
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -I https://api.github.com/user
-      - name: Check GITHUB_TOKEN permissions
+
+      - name: Check rate limit
         run: |
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" https://api.github.com/rate_limit
 
+      - name: Check if PR is from a fork
+        id: fork_check
+        run: |
+          echo "IS_FORK=$(jq -r '.pull_request.head.repo.fork' $GITHUB_EVENT_PATH)" >> $GITHUB_OUTPUT
+
       - name: Validate commit messages
+        if: ${{ steps.fork_check.outputs.IS_FORK == 'false' }}
         uses: commit-check/commit-check-action@v0.6.1
         with:
           message: true
@@ -34,3 +41,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMIT_CHECK_DEBUG: true
+
+      - name: Skip commit message validation on forked PRs
+        if: ${{ steps.fork_check.outputs.IS_FORK == 'true' }}
+        run: echo "Skipping commit check on forked PR due to permission restrictions."
