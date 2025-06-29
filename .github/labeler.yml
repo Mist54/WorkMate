@@ -1,0 +1,33 @@
+# ===============================
+# Head Branch Labeling (source branch)
+# ===============================
+
+# Individual developer labels
+adhi:
+  - head-branch: '^feature/adhi$'
+
+sankalp:
+  - head-branch: '^feature/sankalp$'
+
+sushmitha:
+  - head-branch: '^feature/sushmitha$'
+
+shrujan:
+  - head-branch: '^feature/shrujan$'
+
+# Generic feature branch label
+feature:
+  - head-branch: '^feature/.*'
+
+# ===============================
+# Base Branch Labeling (target branch)
+# ===============================
+
+develop:
+  - base-branch: '^develop$'
+
+master:
+  - base-branch: '^master$'
+
+main:
+  - base-branch: '^main$'
