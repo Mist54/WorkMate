@@ -84,10 +84,10 @@ namespace WorkMate.Models
 
     public class TestCaseTagModel
     {
-        [Key, Column(Order = 0)]
+        [Key, Column(Order = 0)]// order Defines the order of keys 
         public int TagId { get; set; }
 
-        [Key, Column(Order = 1)]
+        [Key, Column(Order = 1)] //order Defines the order of keys 
         public int TestCaseId { get; set; }
 
         public virtual TestCaseModel TestCase { get; set; }

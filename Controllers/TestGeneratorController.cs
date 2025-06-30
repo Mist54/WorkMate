@@ -7,6 +7,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WorkMate.Filters;
+using WorkMate.ViewModels;
+using WorkMate.Models;
+using System.Text;
 
 namespace WorkMate.Controllers
 {
@@ -14,7 +17,7 @@ namespace WorkMate.Controllers
     {
         #region Manual EXCEL Test file generator 
         // GET: TestGenerator
-        public ActionResult Index()
+        public ActionResult TestExporter()
         {
             return View();
         }
@@ -44,14 +47,14 @@ namespace WorkMate.Controllers
                     return Json(new { success = true, message = "Uploaded successfully. Starting download...", downloadUrl = Url.Action("DownloadExcel") });
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { success = false, message = "Invalid data" + ex });
             }
-            
-                
 
-            
+
+
+
         }
 
         private FileResult ExportDataToExelFile(ViewModels.TestCaseSubmission testCaseSubmissionData)
@@ -96,7 +99,7 @@ namespace WorkMate.Controllers
                     ws.Cell(row, 7).Value = t.Type.ToString();
                     ws.Cell(row, 8).Value = t.Priority.ToString();
                     ws.Cell(row, 9).Value = t.TestCaseStatus.ToString();
-                    ws.Cell(row, 10).Value = string.IsNullOrEmpty(t.CreatedBy)? "" : t.CreatedBy;
+                    ws.Cell(row, 10).Value = string.IsNullOrEmpty(t.CreatedBy) ? "" : t.CreatedBy;
                     ws.Cell(row, 11).Value = DateTime.Now.ToString("dd/MM/yyyy : HH:mm");
                 }
 
@@ -112,7 +115,7 @@ namespace WorkMate.Controllers
         [HttpGet]
         public ActionResult DownloadExcel()
         {
-            List<ViewModels.TestCaseViewModel>data = Session["LastSubmittedTestCases"] as List<ViewModels.TestCaseViewModel>;
+            List<ViewModels.TestCaseViewModel> data = Session["LastSubmittedTestCases"] as List<ViewModels.TestCaseViewModel>;
             if (data == null || !data.Any())
             {
                 return Content("No test case data available to download.");
@@ -125,13 +128,7 @@ namespace WorkMate.Controllers
         #endregion Manual EXCEL Test file generator 
 
 
-        #region TestAutomator
-        public ActionResult TestAutomator()
-        {
-            return View();
-        }
-
-        #endregion TestAutomator
+       
     }
 
 }

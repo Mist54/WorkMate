@@ -1,4 +1,4 @@
-﻿// This file contains all the js codes related to Testcase index page 
+﻿// This file contains all the js codes related to TestExporter page
 
 //Page load code
 $(document).ready(function () {
