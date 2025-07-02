@@ -54,7 +54,7 @@ namespace WorkMate
                         Response.Redirect("~/Error/NotFound");
                         break;
                     case 403:
-                        Response.Redirect("~/Error/Forbidden");
+                        Response.Redirect("~/Error/AccessDenied");
                         break;
                     default:
                         Response.Redirect("~/Error/Index");
