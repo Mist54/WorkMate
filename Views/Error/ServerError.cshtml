@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Server Error - We're Working On It";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+        <div class="row justify-content-center w-100">
+            <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5 text-center">
+                        <!-- Server Error Icon -->
+                        <div class="mb-4">
+                            <div class="position-relative d-inline-block">
+                                <i class="fa fa-server text-danger" style="font-size: 5rem;"></i>
+                                <i class="fa  fa-exclamation text-warning position-absolute"
+                                   style="font-size: 2rem; top: -10px; right: -15px;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Error Title -->
+                        <h1 class="display-4 fw-bold text-danger mb-3">
+                            <i class="fas fa-tools me-2"></i>500
+                        </h1>
+                        <h2 class="h3 text-dark mb-4">Internal Server Error</h2>
+
+                        <!-- Witty Description -->
+                        <div class="mb-4">
+                            <p class="lead text-secondary mb-3">
+                                <i class="fas fa-robot me-2 text-info"></i>
+                                Our servers are having a bit of a meltdown!
+                            </p>
+                            <p class="text-muted">
+                                Don't panic! Our engineering team has been notified and they're probably frantically typing away with lots of coffee right now.
+                            </p>
+                        </div>
+
+                        <!-- Status Information -->
+                        <div class="alert alert-info border-0 mb-4" role="alert">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class=" fa fa-circle-o-notch me-2"></i>
+                                <small class="mb-0">
+                                    <strong>Status:</strong> We're on it! ETA: Soon™ Error code --> KNOCK OUT <i class="fa fa-smile-o"></i>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fun Footer -->
+                <!-- Fun Footer Message -->
+                <div class="text-center mt-4">
+                    <small>
+
+                        <em>"Error 500: When servers need a timeout too!"</em>
+
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
