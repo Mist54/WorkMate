@@ -51,13 +51,9 @@ namespace WorkMate.Controllers
             {
                 return Json(new { success = false, message = "Invalid data" + ex });
             }
-
-
-
-
         }
 
-        private FileResult ExportDataToExelFile(ViewModels.TestCaseSubmission testCaseSubmissionData)
+        private FileResult ExportDataToExelFile(ViewModels.TestCaseSubmission testCaseSubmissionData, int duplicateCount)
         {
             List<ViewModels.TestCaseViewModel> testCases = testCaseSubmissionData.TestCases;
 
@@ -107,6 +103,14 @@ namespace WorkMate.Controllers
                 {
                     workbook.SaveAs(stream);
                     stream.Position = 0;
+
+                    if (duplicateCount > 0)
+                    {
+                        TempData["ToastMessage"] = $"Duplicate test cases found: {duplicateCount}";
+                        TempData["ToastType"] = "warning";
+                        TempData["ToastTitle"] = "Warning";
+                    }
+
                     return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
                 }
             }
@@ -116,19 +120,28 @@ namespace WorkMate.Controllers
         public ActionResult DownloadExcel()
         {
             List<ViewModels.TestCaseViewModel> data = Session["LastSubmittedTestCases"] as List<ViewModels.TestCaseViewModel>;
+            int duplicateCount = 0;
             if (data == null || !data.Any())
             {
                 return Content("No test case data available to download.");
             }
+            else
+            {
+                HashSet<ViewModels.TestCaseViewModel> uniqueTestCase = new HashSet<TestCaseViewModel>(data);
+                duplicateCount = data.Count - uniqueTestCase.Count;
 
-            var submission = new ViewModels.TestCaseSubmission { TestCases = data };
-            return ExportDataToExelFile(submission);
+            }
+            
+            
+           
+
+            ViewModels.TestCaseSubmission submission = new ViewModels.TestCaseSubmission { TestCases = data };
+            return ExportDataToExelFile(submission, duplicateCount);
         }
-
         #endregion Manual EXCEL Test file generator 
 
 
-       
+
     }
 
 }

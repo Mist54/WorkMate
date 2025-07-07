@@ -172,14 +172,18 @@ function ProcessFile() {
             if (response.success) {
                 showToast("success", response.message);
                 //Force file download
-                window.location.href = response.downloadUrl;
+                /* window.location.href = response.downloadUrl;*/
+                window.open(response.downloadUrl, '_blank');
             } else {
                 showToast("error", response.message);
             }
+
+            window.location.reload();
         },
         error(err) {
             showToast("error", response.message);
         }
+
     });
 }
 
@@ -245,7 +249,7 @@ function clearForm() {
         }
 
 
-        if (getId === 'TaskName' || getId === 'TestCaseName') {
+        if (getId === 'TestCaseName') {
             let currentValue = $(this).val().trim();
 
             if (!currentValue) {

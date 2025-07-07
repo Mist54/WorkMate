@@ -10,7 +10,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-plus-circle me-2"></i>Test Case Generator
+                        <i class="fa fa-plus-circle me-2"></i>Test Case Generator
                     </h5>
                 </div>
                 <div class="card-body">
@@ -42,7 +42,7 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    @Html.EditorFor(m => m.TestCaseName, new { htmlAttributes = new { @class = "form-control", placeholder = "Test Case Name" } })
+                                    @Html.EditorFor(m => m.TestCaseName, new { htmlAttributes = new { @class = "form-control", placeholder = "Test Case Name", @tabindex = "-1" } })
                                     @Html.LabelFor(m => m.TestCaseName)
                                     @Html.ValidationMessageFor(m => m.TestCaseName, "", new { @class = "text-danger small" })
                                 </div>
@@ -110,12 +110,12 @@
                     <!-- Action Buttons -->
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <button class="btn btn-outline-secondary" id="btnClearForm" type="button">
-                            <i class="fas fa-eraser me-1"></i>Clear Form
+                            <i class="fa fa-trash"></i>&nbsp;Clear form
                         </button>
                         <button class="btn btn-primary" id="btnSaveToTable" type="button">
-                            <i class="fas fa-save me-1"></i>Save Test Case
+                            <i class="fa fa-save"></i>&nbsp;Save test case
                         </button>
-                        <button class="btn btn-warning" id="btnGenerateTestCase">Generate testcase files</button>
+                        <button class="btn btn-warning" id="btnGenerateTestCase"><i class="fa fa-upload"></i>&nbsp;Generate testcase files</button>
                     </div>
                 </div>
             </div>
@@ -126,7 +126,7 @@
             <div class="card shadow-sm">
                 <div class="card-header bg-success text-white">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-table me-2"></i>Test Cases List
+                        <i class="fa fa-table me-2"></i>Test Cases List
                     </h5>
                 </div>
                 <div class="card-body p-0">
@@ -134,7 +134,7 @@
                         <!-- Auto generated table will be set here -->
                         <div class="d-flex align-items-center justify-content-center" style="height: 400px;">
                             <div class="text-center text-muted">
-                                <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+                                <i class="fa fa-clipboard fa-3x mb-3"></i>
                                 <p class="mb-0">No test cases created yet</p>
                                 <small>Fill out the form and click "Save Test Case" to get started</small>
                             </div>

@@ -39,7 +39,7 @@ namespace WorkMate.Models
 
         public string Notes { get; set; }
 
-        [Required, MaxLength(100)]
+        //[Required, MaxLength(100)]
         public string CreatedBy { get; set; }
 
         [Required]
@@ -49,6 +49,8 @@ namespace WorkMate.Models
 
         [Required,MaxLength(100)]
         public string ModifiedBy { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
 
         [InverseProperty("TestCases")]
         public virtual TaskModel Task { get; set; }

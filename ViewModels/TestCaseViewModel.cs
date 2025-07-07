@@ -68,8 +68,10 @@ namespace WorkMate.ViewModels
 
         public DateTime? ModifiedDate { get; set; }
 
-        
+
         public string ModifiedBy { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
 
         public IEnumerable<TestCaseType> TypeOptions { get; set; }
         public IEnumerable<TestCasePriority> PriorityOptions { get; set; }
@@ -84,11 +86,11 @@ namespace WorkMate.ViewModels
             Notes = string.Empty;
             CreatedDate = DateTime.Now;
             ModifiedDate = DateTime.Now;
-            
+
         }
 
-        public TestCaseViewModel(int taskId,string taskName,string taskDescription,int testCaseId,string testCaseName,string preconditions,string steps,string expectedResult,string actualResult,
-                                    string notes,TestCaseType type,TestCasePriority priority,TestCaseStatus testCaseStatus,string createdBy,DateTime createdDate,DateTime? modifiedDate,string modifiedBy)
+        public TestCaseViewModel(int taskId, string taskName, string taskDescription, int testCaseId, string testCaseName, string preconditions, string steps, string expectedResult, string actualResult,
+                                    string notes, TestCaseType type, TestCasePriority priority, TestCaseStatus testCaseStatus, string createdBy, DateTime createdDate, DateTime? modifiedDate, string modifiedBy)
         {
             TaskId = taskId;
             TaskName = taskName;
@@ -110,10 +112,52 @@ namespace WorkMate.ViewModels
         }
 
 
-    }
+        /// <summary>
+        /// used for checking object value 
+        /// hashset not able to filter if pointers are differnt 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            bool result = false;
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return result;
+            }
+            else
+            {
+                var other = (TestCaseViewModel)obj;
+                if (string.Equals(ExpectedResult, other.ExpectedResult, StringComparison.OrdinalIgnoreCase)
+                     && string.Equals(ActualResult, other.ActualResult, StringComparison.OrdinalIgnoreCase))
+                {
+                    result = true;
 
+                }
+                return result;
+            }
+        }
+
+
+        /// <summary>
+        /// returning hashcode 
+        /// here hashSet able to return hashsets with corrected hashcode after equal.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(
+                ExpectedResult?.Trim().ToLowerInvariant() ?? "",
+                ActualResult?.Trim().ToLowerInvariant() ?? ""
+            );
+        }
+
+    }
     public class TestCaseSubmission
     {
         public List<TestCaseViewModel> TestCases { get; set; }
     }
+
 }
+
+

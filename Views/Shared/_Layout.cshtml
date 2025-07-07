@@ -28,6 +28,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>@Html.ActionLink("Manual Testcase Exporter", "TestExporter", "TestGenerator", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Tasks list", "index", "Task", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
                 </ul>
@@ -60,6 +61,36 @@
                 placeholder: 'Select an option',
                 allowClear: true
             });
+
+            //Universal declaration of the function  window.toggleBootstrapModal = function(modalId, action) { ...} 
+            //here if we write it as window.functionname it will be explicitly set as global
+            window.toggleBootstrapModal = function (modalId, action) {
+                var modalElement = document.getElementById(modalId);
+                if (modalElement) {
+                    var bootstrapModal = bootstrap.Modal.getInstance(modalElement) //Bootstrap 5+ interacting with modals
+
+                    /*An instance of the Bootstrap Modal JavaScript class needs to be created to
+                     * give a specific HTML element(identified by its ID) the interactive behavior of a Bootstrap modal, 
+                     * allowing you to programmatically activate(show) or deactivate(hide) it*/
+                    if (!bootstrapModal) {
+                        bootstrapModal = new bootstrap.Modal(modalElement);
+                    }
+
+                    if (bootstrapModal) {
+                        if (action == 'show') {
+                            bootstrapModal.show();
+                        }
+                        else if (action == 'hide') {
+                            bootstrapModal.hide();
+                        }
+                    }
+                    
+                }
+                else {
+                    console.error("Model Could not be found.");
+                }
+
+            }
         });
 
         // Function to display iziToast notifications

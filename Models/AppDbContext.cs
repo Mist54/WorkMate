@@ -19,6 +19,13 @@ namespace WorkMate.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            //here we will define the names 
+            //If explicity not defined it will take the names of the table as same as class name
+            modelBuilder.Entity<TaskModel>().ToTable("Tasks");
+            modelBuilder.Entity<TestCaseModel>().ToTable("TestCases");
+            modelBuilder.Entity<TagModel>().ToTable("Tags");
+            modelBuilder.Entity<TestCaseTagModel>().ToTable("TestCaseTags");
+
             modelBuilder.Entity<TestCaseTagModel>().HasKey(t => new { t.TagId, t.TestCaseId });
             base.OnModelCreating(modelBuilder);
         }
