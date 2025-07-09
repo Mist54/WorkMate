@@ -17,13 +17,17 @@ namespace WorkMate.ViewModels
 
         //[Required]
         [DataType(DataType.MultilineText)]
+        [Display(Name = "Task Description")]
         public string TaskDescription { get; set; }
+
         public ICollection<TestCaseModel> TestCases { get; set; } = new List<TestCaseModel>();
     }
 
     public class TasksCombinedViewModel 
     {
         public ICollection<TaskModel> AllTaskList { get; set; } = new List<TaskModel>();
+
         public TaskModel SelectedTask { get; set; }
+        public TaskModel NewTask { get; set; }//For create 
     }
 }

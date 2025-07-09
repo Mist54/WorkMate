@@ -17,11 +17,11 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-6">
+                <div class="col-6 bg-light rounded shadow-sm border border-light">
                     <h3 class="text-primary">Selected Task Details</h3>
                     @if (Model.SelectedTask != null)
                     {
-                        using (Html.BeginForm("SaveChanges", "Task", FormMethod.Post, new { @class = "bg-light shadow-sm border border-light" }))
+                        using (Html.BeginForm("SaveChanges", "Task", FormMethod.Post, new { @class = "" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.SelectedTask.TaskId)
@@ -35,25 +35,34 @@
                             </div>
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    @Html.EditorFor(m => m.SelectedTask.TaskDescription, new { htmlAttributes = new { @class = "form-control", placeholder = "Task Description", rows = "5", style = "height: 120px;", id = "selectedTaskDescription" } })
+                                    @Html.TextAreaFor(m => m.SelectedTask.TaskDescription, new { @class = "form-control", placeholder = "Task Description" })
                                     @Html.LabelFor(m => m.SelectedTask.TaskDescription, "Task Description", new { @for = "selectedTaskDescription" })
                                     @Html.ValidationMessageFor(m => m.SelectedTask.TaskDescription, "", new { @class = "text-danger small mt-1" })
                                 </div>
                             </div>
-                            <div class="row mt-4">
-                                <div class="col-3">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fa fa-save me-2"></i> Save Changes
-                                    </button>
+                            <div class="row mt-4 mb-1">
+                                <div class="col-12">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fa fa-save me-2"></i> Save changes
+                                        </button>
+                                        <button type="button" class="btn btn-danger" id="btnShowDeleteModal" onclick="showDeleteModal()">
+                                            <i class="fa fa-trash me-2"></i>Delete task
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-danger" id="btnShowDeleteModal" onclick="showDeleteModal()">
-                                        <i class="fa fa-trash me-2"></i>Delete task
-                                    </button>
-                                </div>
+
 
                             </div>
                         }
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <p class="alert alert-warning">No task to select. </p>
+                            </div>
+                        </div>
                     }
                 </div>
                 <div class="col-6">
@@ -92,6 +101,13 @@
                                             </tr>
                                         }
                                     }
+                                    else
+                                    {
+                                        <tr class="text-warning text-center">
+                                            <td colspan="4">No data found.</td>
+                                        </tr>
+                                    }
+
                                 </tbody>
                             </table>
                         </div>
@@ -119,9 +135,9 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="form-floating">
-                                @Html.EditorFor(m => m.SelectedTask.TaskName, new { htmlAttributes = new { @class = "form-control", placeholder = "Task Name" } })
-                                @Html.LabelFor(m => m.SelectedTask.TaskName)
-                                @Html.ValidationMessageFor(m => m.SelectedTask.TaskName, "", new { @class = "text-danger small" })
+                                @Html.EditorFor(m => m.NewTask.TaskName, new { htmlAttributes = new { @class = "form-control", placeholder = "Task Name" } })
+                                @Html.LabelFor(m => m.NewTask.TaskName)
+                                <p class="text-danger d-none" id="errmsgMdlTaskName"><b>Please provide the task name.</b></p>
                             </div>
                         </div>
                     </div>
@@ -130,9 +146,9 @@
 
                         <div class="col-12">
                             <div class="form-floating">
-                                @Html.EditorFor(m => m.SelectedTask.TaskDescription, new { htmlAttributes = new { @class = "form-control", placeholder = "Actual Result" } })
-                                @Html.LabelFor(m => m.SelectedTask.TaskDescription)
-                                @Html.ValidationMessageFor(m => m.SelectedTask.TaskDescription, "", new { @class = "text-danger small" })
+                                @Html.TextAreaFor(m => m.NewTask.TaskDescription, new { @class = "form-control", placeholder = "Task Description" })
+                                @Html.LabelFor(m => m.NewTask.TaskDescription, "Task Description")
+                                <p class="text-danger d-none" id="errmsgMdlTaskDescription"><b>Please provide the task description.</b></p>
                             </div>
                         </div>
 
@@ -142,7 +158,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-4">
+                    <button type="submit" class="btn btn-primary px-4" id="btnCreateNewTask">
                         Create new task
                     </button>
                 </div>
@@ -163,17 +179,27 @@
                 </h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center">
-                <p class="lead mb-3">Are you sure you want to delete Task: <strong id="itemToDeleteNamePlaceholder">@Model.SelectedTask.TaskName</strong>?</p>
-                <p class="text-danger">This action cannot be undone.</p>
-                @Html.HiddenFor(m => Model.SelectedTask.TaskId)
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary  px-4" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger px-4" id="confirmDeleteButton">
-                    <i class="bi bi-trash-fill me-2"></i> Delete
-                </button>
-            </div>
+            @using (Html.BeginForm("Delete", "Task", FormMethod.Post, new { @class = "" }))
+            {
+                @Html.AntiForgeryToken()
+                if (Model.SelectedTask != null)
+                {
+                    <div class="modal-body text-center">
+                        <p class="lead mb-3">Are you sure you want to delete Task: <strong id="itemToDeleteNamePlaceholder">@Model.SelectedTask.TaskName</strong>?</p>
+                        <p class="text-danger">This action cannot be undone.</p>
+                        @Html.Hidden("taskId", Model.SelectedTask.TaskId)
+                    </div>
+                }
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary  px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger px-4" id="confirmDeleteButton">
+                        <i class="bi bi-trash-fill me-2"></i> Delete
+                    </button>
+                </div>
+
+            }
+
         </div>
     </div>
 </div>
