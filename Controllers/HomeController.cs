@@ -11,6 +11,7 @@ namespace WorkMate.Controllers
         public ActionResult Index()
         {
             return View();
+            //return Redirect("/Error/AccessDenied");
         }
 
         public ActionResult About()

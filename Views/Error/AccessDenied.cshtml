@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Access Denied - 403";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+    <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="row justify-content-center w-100">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-5 text-center">
+                        <!-- Access Denied Icon -->
+                        <div class="mb-3">
+                            <div class="display-1 text-danger mb-2">
+                                <span style="font-size: 6rem;"><i class="fa fa-lock"></i></span>
+                            </div>
+                        </div>
+
+                        <!-- Main Error Message -->
+                        <h1 class="display-4 fw-bold text-dark mb-3">403</h1>
+                        <h2 class="h4 text-muted mb-4">Access Denied</h2>
+
+                        <!-- Humorous Description -->
+                        <div class="mb-4">
+                            <p class="lead text-secondary mb-2">
+                                <i class="fa fa-user-secret text-info me-2"></i>
+                                Whoa there, secret agent! This area is classified.
+                            </p>
+                            <p class="text-muted">
+                                You don't have the proper clearance level to access this digital fortress. Our security team takes their job very seriously!
+                            </p>
+                        </div>
+
+                        <!-- Error Code -->
+                        <div class="alert alert-light border mb-4" role="alert">
+                            <small class="text-muted">
+                                <i class="fa fa-shield me-1"></i>
+                                <strong>Security Code:</strong> UNAUTHORIZED_ENTRY_ATTEMPT_403
+                            </small>
+                        </div>
+                        <!-- Security Notice -->
+                        <div class="alert alert-warning border-0 mb-4" role="alert">
+                            <div class="d-flex align-items-center justify-content-center">
+                                <i class="fa fa-exclamation-triangle me-2"></i>
+                                <small class="mb-0">
+                                    <strong>Security Notice:</strong> This attempt has been logged for security purposes
+                                </small>
+                            </div>
+                        </div>
+
+                    
+                    </div>
+                </div>
+                <!-- Fun Footer Message -->
+                <div class="text-center mt-4">
+                    <div class="card border-0">
+                        <div class="card-body py-3">
+                            <small>
+                               
+                                <em>"With great power comes great responsibility... and access restrictions!"</em>
+                                
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
