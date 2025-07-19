@@ -5,20 +5,25 @@ using System.Web;
 using System.Web.Mvc;
 using WorkMate.ViewModels;
 using WorkMate.Models;
+using WorkMate.Helpers;
 
 namespace WorkMate.Controllers
 {
     public class TaskController : Controller
     {
+        //intance for trisearch fuzzy approch
+        private static TrieSearch trieSearchInstance = new TrieSearch();
+        private static bool isTrieBuilt = false;
+
         // GET: Task
-        public ActionResult Index(int? selectedId)
+        public ActionResult Index(int? selectedId,string searchString = "", string searchType= "exact")
         {
             TasksCombinedViewModel tasksCombinedViewModel = new TasksCombinedViewModel();
 
             try
             {
-
-                tasksCombinedViewModel.AllTaskList = getAllTask();
+                
+                tasksCombinedViewModel.AllTaskList = getAllTask(searchString.ToLower().Trim(),searchType.ToLower().Trim());
                 if (selectedId != null && int.TryParse(selectedId.ToString(), out int id))
                 {
                     tasksCombinedViewModel.SelectedTask = getSelectedTask(id);
@@ -37,15 +42,23 @@ namespace WorkMate.Controllers
             return View(tasksCombinedViewModel);
         }
 
-        private List<TaskModel> getAllTask()
+        private List<TaskModel> getAllTask(string searchString="", string searchType="exact")
         {
             try
             {
                 List<TaskModel> AllTasks = new List<TaskModel>();
                 using (var db = new AppDbContext())
                 {
-                    AllTasks = db.Tasks.Where(t => !t.IsDeleted).OrderByDescending(t => t.CreatedDate).ToList();
-                    //AllTasks = db.Tasks.OrderBy(t => t.TaskId).ToList();
+                    if (searchString == string.Empty)
+                    {
+                        AllTasks = db.Tasks.Where(t => !t.IsDeleted).OrderByDescending(t => t.CreatedDate).ToList();
+                    }
+                    else
+                    {
+                        AllTasks = search(searchString, searchType);
+                        
+                    }
+                   
 
                 }
 
@@ -56,6 +69,67 @@ namespace WorkMate.Controllers
                 throw ex;
             }
 
+        }
+
+        private List<TaskModel> search(string searchString, string searchType)
+        {
+            try
+            {
+                List<TaskModel> AllTasKList = new List<TaskModel>();
+                List<TaskModel> filterdSearchList = new List<TaskModel>();
+                AllTasKList = getAllTask();
+
+                if (searchType.ToLower().Trim() == "exact")
+                {
+                    Dictionary<string, TaskModel> TaskList = AllTasKList.ToDictionary(t => t.TaskName.ToLowerInvariant().Trim());
+                    if (TaskList.TryGetValue(searchString.ToLowerInvariant().Trim(), out TaskModel result) && result != null)
+                    {
+                        filterdSearchList.Add(result);
+                    }
+
+                }
+                else if (searchType.ToLower().Trim() == "partial")
+                {
+                    filterdSearchList = AllTasKList.Where(t => t.TaskName.ToLowerInvariant().Trim().Contains(searchString.ToLowerInvariant().Trim())).ToList();
+                }
+                else if (searchType.ToLower().Trim() == "prefix")
+                {
+                    filterdSearchList = AllTasKList.Where(t => t.TaskName.ToLowerInvariant().Trim().StartsWith(searchString.ToLowerInvariant().Trim())).ToList();
+                }
+                else if (searchType.ToLower().Trim() == "fuzzy")
+                {
+                    if (!isTrieBuilt)
+                    {
+                        trieSearchInstance.BuildIndex(AllTasKList);
+                        isTrieBuilt = true;
+                    }
+                    List<TaskModel> results = trieSearchInstance.SearchFuzzy(searchString.ToLowerInvariant().Trim(), 2);
+                    if (results != null && results.Any())
+                    {
+                        filterdSearchList.AddRange(results);
+                    }
+
+                    if (filterdSearchList.Count == 0)
+                    {
+                        SimpleFuzzySearch fuzzySearch = new SimpleFuzzySearch();
+                        fuzzySearch.SetTasks(AllTasKList);
+
+                        List<TaskModel> SimpleFuzzSearchresults = fuzzySearch.SearchFuzzy(searchString.ToLowerInvariant().Trim(), 2);
+                        if (SimpleFuzzSearchresults != null && SimpleFuzzSearchresults.Any())
+                        {
+                            filterdSearchList.AddRange(results);
+                        }
+                    }
+                }
+
+                return filterdSearchList;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+
+            
         }
 
         private TaskModel getSelectedTask(int selectedId)

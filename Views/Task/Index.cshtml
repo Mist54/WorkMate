@@ -36,7 +36,7 @@
                             <div class="mb-3">
                                 <div class="form-floating">
                                     @Html.TextAreaFor(m => m.SelectedTask.TaskDescription, new { @class = "form-control", placeholder = "Task Description" })
-                                    @Html.LabelFor(m => m.SelectedTask.TaskDescription, "Task Description", new { @for = "selectedTaskDescription" })
+                                    @Html.LabelFor(m => m.SelectedTask.TaskDescription, "Task Description", new { @for = "SelectedTask_TaskDescription" })
                                     @Html.ValidationMessageFor(m => m.SelectedTask.TaskDescription, "", new { @class = "text-danger small mt-1" })
                                 </div>
                             </div>
@@ -67,7 +67,43 @@
                 </div>
                 <div class="col-6">
                     <div class="bg-light h-100 shadow-sm">
-                        <h3 class="text-primary mb-3">All Available Tasks</h3>
+                        @using (Html.BeginForm("index","Task",FormMethod.Post,new { id="searchForm",@class=""}))
+                        {
+                            <div class="row">
+                                <div class="col-4">
+                                    <h3 class="text-primary mb-3 my-2">All Available Tasks</h3>
+                                </div>
+                                <div class="col-8 my-2">
+                                    <div class="input-group">
+                                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="searchTypeButton" name="searchType">
+                                            Exact Search
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item search-option" href="#" data-search-type="exact">Exact Search</a></li>
+                                            <li><a class="dropdown-item search-option" href="#" data-search-type="partial">Partial Match</a></li>
+                                            <li><a class="dropdown-item search-option" href="#" data-search-type="prefix">Prefix Match</a></li>
+                                            <li><a class="dropdown-item search-option" href="#" data-search-type="fuzzy">Fuzzy Match</a></li>
+                                        </ul>
+
+                                        <input type="search" class="form-control" placeholder="Search by task name" aria-label="Search" id="searchString" name="searchString" />
+
+                                        <button class="btn btn-success" type="submit" id="btnSearchTask">
+                                            <i class="fa fa-search"></i>
+                                        </button>&nbsp;
+                                        <button class="btn btn-warning" type="submit" id="btnRefreshSearch">
+                                            <i class="fa fa-refresh"></i>
+                                        </button>
+                                        @Html.Hidden("searchType", "exact", new { id = "hdnSearchType" })
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        }
+
+
                         <div class="table-responsive">
                             <table class="table table-hover table-striped table-bordered overflow-hidden">
                                 <thead class="table-dark">
@@ -119,9 +155,9 @@
     </div>
 </div>
 <!-- Create Task Modal -->
-<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
-        @using (Html.BeginForm("Create", "Task", FormMethod.Post))
+        @using (Html.BeginForm("Create", "Task", FormMethod.Post, new { id = "createTaskForm", @class = "" }))
         {
             @Html.AntiForgeryToken()
             <div class="modal-content shadow">
@@ -137,7 +173,7 @@
                             <div class="form-floating">
                                 @Html.EditorFor(m => m.NewTask.TaskName, new { htmlAttributes = new { @class = "form-control", placeholder = "Task Name" } })
                                 @Html.LabelFor(m => m.NewTask.TaskName)
-                                <p class="text-danger d-none" id="errmsgMdlTaskName"><b>Please provide the task name.</b></p>
+                                <p class="text-danger d-none" id="errmsgMdlTaskName"><b>Please provide correct taskname, taskname should atleast contains 3 letters.</b></p>
                             </div>
                         </div>
                     </div>
@@ -148,7 +184,7 @@
                             <div class="form-floating">
                                 @Html.TextAreaFor(m => m.NewTask.TaskDescription, new { @class = "form-control", placeholder = "Task Description" })
                                 @Html.LabelFor(m => m.NewTask.TaskDescription, "Task Description")
-                                <p class="text-danger d-none" id="errmsgMdlTaskDescription"><b>Please provide the task description.</b></p>
+                                <p class="text-danger d-none" id="errmsgMdlTaskDescription"><b>Please provide correct task description, task description should atleast contains 3 letters.</b></p>
                             </div>
                         </div>
 

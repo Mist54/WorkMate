@@ -179,6 +179,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\TrieSearch.cs" />
     <Compile Include="Migrations\202507021408086_InitialTestCaseModuleCreate.cs" />
     <Compile Include="Migrations\202507021408086_InitialTestCaseModuleCreate.designer.cs">
       <DependentUpon>202507021408086_InitialTestCaseModuleCreate.cs</DependentUpon>
