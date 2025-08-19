@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using WorkMate.ViewModels;
 
 namespace WorkMate.Models
 {
@@ -47,7 +48,7 @@ namespace WorkMate.Models
 
         public DateTime? ModifiedDate { get; set; }
 
-        [Required,MaxLength(100)]
+        //[Required,MaxLength(100)]
         public string ModifiedBy { get; set; }
 
         public bool IsDeleted { get; set; } = false;
@@ -69,6 +70,24 @@ namespace WorkMate.Models
             Notes = string.Empty;
 
 
+        }
+
+        public TestCaseModel(TestCaseViewModel model)
+        {
+            this.TaskId = model.TaskId;
+            this.TestCaseName = model.TestCaseName;
+            this.TestCaseTimeStamp = DateTime.Now;
+            this.Preconditions = model.Preconditions;
+            this.Steps = model.Steps;
+            this.ExpectedResult = model.ExpectedResult;
+            this.ActualResult = model.ActualResult;
+            this.Type = model.Type;
+            this.Priority = model.Priority;
+            this.TestCaseStatus = model.TestCaseStatus;
+            this.Notes = model.Notes;
+            this.IsDeleted = model.IsDeleted;
+
+                   
         }
     }
 

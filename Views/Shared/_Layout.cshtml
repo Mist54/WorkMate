@@ -9,6 +9,7 @@
     <link href="~/Content/plugins/select2.css" rel="stylesheet" />
     <link href="~/Content/plugins/iziToast.css" rel="stylesheet" />
     <link href="~/Content/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
 </head>
 <body class="d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg bg-primary-subtle">
@@ -27,8 +28,9 @@
                             Tester X Dev
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li>@Html.ActionLink("Manual Testcase Exporter", "TestExporter", "TestGenerator", null, new { @class = "dropdown-item" })</li>
+
                             <li>@Html.ActionLink("Tasks list", "index", "Task", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("Testcases", "Create", "Testcase", null, new { @class = "dropdown-item" })</li>
                         </ul>
                     </li>
                 </ul>
@@ -61,8 +63,11 @@
                 placeholder: 'Select an option',
                 allowClear: true
             });
+            
 
-            //Universal declaration of the function  window.toggleBootstrapModal = function(modalId, action) { ...} 
+
+
+            //Universal declaration of the function  window.toggleBootstrapModal = function(modalId, action) { ...}
             //here if we write it as window.functionname it will be explicitly set as global
             window.toggleBootstrapModal = function (modalId, action) {
                 var modalElement = document.getElementById(modalId);
@@ -70,7 +75,7 @@
                     var bootstrapModal = bootstrap.Modal.getInstance(modalElement) //Bootstrap 5+ interacting with modals
 
                     /*An instance of the Bootstrap Modal JavaScript class needs to be created to
-                     * give a specific HTML element(identified by its ID) the interactive behavior of a Bootstrap modal, 
+                     * give a specific HTML element(identified by its ID) the interactive behavior of a Bootstrap modal,
                      * allowing you to programmatically activate(show) or deactivate(hide) it*/
                     if (!bootstrapModal) {
                         bootstrapModal = new bootstrap.Modal(modalElement);
@@ -84,7 +89,7 @@
                             bootstrapModal.hide();
                         }
                     }
-                    
+
                 }
                 else {
                     console.error("Model Could not be found.");

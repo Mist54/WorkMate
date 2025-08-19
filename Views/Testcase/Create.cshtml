@@ -1,0 +1,122 @@
+﻿@model WorkMate.ViewModels.TestCaseViewModel
+
+@{
+    ViewBag.Title = "Create New Test Case";
+}
+
+<div class="container-fluid my-4">
+    <div class="row g-4">
+        <!-- Left Column: Test Case Creation Form -->
+        <div class="col-md-6">
+            <div class="card shadow-sm  h-100">
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top-3">
+                    <h5 class="card-title mb-0">Create New Test Case</h5>
+                </div>
+                @using (Html.BeginForm("Create", "TestCase", FormMethod.Post, new { @class = "h-100" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="card-body p-4 d-flex flex-column justify-content-between">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <b>@Html.ValidationSummary(true, "Please fill below required fields", new { @class = "text-danger alert alert-danger p-2 text-center" })</b>
+                            </div>
+
+                            <!-- Task Dropdown -->
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.TaskId, "Task", new { @class = "form-label" })
+                                @{
+                                    var ddlTasks = Model.ddlTasks ?? Enumerable.Empty<SelectListItem>();
+                                }
+                                @Html.DropDownListFor(model => model.TaskId, ddlTasks, "-- Select a Task --", new { @class = "form-control form-select select2" })
+                                @Html.ValidationMessageFor(model => model.TaskId, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Test Case Name -->
+                            <div class="col-md-6">
+                                @Html.LabelFor(model => model.TestCaseName, new { @class = "form-label" })
+                                @Html.EditorFor(model => model.TestCaseName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.TestCaseName, "", new { @class = "text-danger" })
+                                <small class="text-secondary small">Ex: test, task etc,It automatically precedes</small>
+                            </div>
+
+                            <!-- Preconditions -->
+                            <div class="col-12">
+                                @Html.LabelFor(model => model.Preconditions, new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.Preconditions, 2, 40, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Preconditions, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Steps -->
+                            <div class="col-12">
+                                @Html.LabelFor(model => model.Steps, new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.Steps, 3, 40, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Steps, "", new { @class = "text-danger" })
+                            </div>
+
+                            <!-- Expected Result -->
+                            <div class="col-12">
+                                @Html.LabelFor(model => model.ExpectedResult, new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.ExpectedResult, 2, 40, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ExpectedResult, "", new { @class = "text-danger" })
+                            </div>
+                            <!-- Enums: Type, Priority, Status -->
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.Type, new { @class = "form-label" })
+                                @Html.EnumDropDownListFor(model => model.Type, new { @class = "form-control form-select form-select select2" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.Priority, new { @class = "form-label" })
+                                @Html.EnumDropDownListFor(model => model.Priority, new { @class = "form-control form-select form-select select2" })
+                            </div>
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.TestCaseStatus, new { @class = "form-label" })
+                                @Html.EnumDropDownListFor(model => model.TestCaseStatus, new { @class = "form-control form-select form-select select2" })
+                            </div>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="row g-3 mt-4">
+                            <div class="col-12">
+                                @Html.LabelFor(model => model.Notes, new { @class = "form-label" })
+                                @Html.TextAreaFor(model => model.Notes, 2, 40, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer with buttons on a single line -->
+                    <div class="card-footer bg-light py-2">
+                        <div class="row">
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary w-100">Create</button>
+                            </div>
+                            <div class="col-6">
+                                @Html.ActionLink("Go to main", "Index", null, new { @class = "btn btn-outline-secondary w-100" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Right Column: Current Test Cases (Table Format) -->
+        <div class="col-md-6" id="testCaseTableContainer">
+            <!-- Container for partial table -->
+            <div id="testCaseTableContainer">
+                @Html.Partial("~/Views/Shared/Testcase/_TestcaseTable.cshtml", Model)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+       
+    var createPartialUrl = '@Url.Action("CreatePartial", "Testcase")';
+    </script>
+    <script src="~/Scripts/Testcase.js"></script>
+
+    
+}
