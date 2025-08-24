@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Web.Mvc; 
 using WorkMate.Models;
 
@@ -20,6 +21,15 @@ namespace WorkMate.ViewModels
         public int SelectedTaskId { get; set; }
         public int SelectedTestCaseId { get; set; }
 
+        public int TotalFailedTestcaseCount { get; set; } = 0;
+        public int TotalPassedTestcaseCount { get; set; } = 0;
+        public int TotalOtherTestcaseCount { get; set; } = 0;
+
+
+        public int FailedTestcaseCount { get; set; } = 0;
+        public int PassedTestcaseCount { get; set; } = 0;
+        public int OtherTestcaseCount { get; set; } = 0;
+
         public TestIndexViewModal(List<TaskModel> tasks, List<TestCaseModel> testCases)
         {
             Tasks = tasks ?? new List<TaskModel>();
@@ -30,6 +40,9 @@ namespace WorkMate.ViewModels
 
             // Automatically populate the dropdown lists
             PopulateDropdowns();
+            setTestcaseStatusCount(testCases);
+
+
         }
 
         /// <summary>
@@ -49,5 +62,16 @@ namespace WorkMate.ViewModels
                 Text = tc.TestCaseName
             }).ToList(); 
         }
+
+        public void setTestcaseStatusCount(List<TestCaseModel> testCases)
+        {
+            if (testCases == null || !testCases.Any())
+                return;
+
+            TotalPassedTestcaseCount = testCases.Count(x => x.TestCaseStatus == TestCaseStatus.Passed);
+            TotalFailedTestcaseCount = testCases.Count(x => x.TestCaseStatus == TestCaseStatus.Failed);
+            TotalOtherTestcaseCount = testCases.Count(x => x.TestCaseStatus == TestCaseStatus.Other);
+        }
+
     }
 }
