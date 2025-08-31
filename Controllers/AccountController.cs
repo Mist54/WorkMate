@@ -69,6 +69,9 @@ namespace WorkMate.Controllers
 
         }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -78,7 +81,7 @@ namespace WorkMate.Controllers
             var result = await SignInManager.PasswordSignInAsync(
                 model.UsernameOrEmail,
                 model.Password,
-                false,
+                model.RememberMe,
                 shouldLockout: false);
 
             switch (result)
@@ -113,8 +116,8 @@ namespace WorkMate.Controllers
 
             var user = new AppUsers
             {
-                UserName = registration.Email,
-                Email = registration.Email
+                UserName = registration.Username,
+                Email = registration.Email,
             };
 
             var result = await UserManager.CreateAsync(user, registration.Password);

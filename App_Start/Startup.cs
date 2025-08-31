@@ -19,20 +19,26 @@ namespace WorkMate.App_Start
 
         public void ConfigureAuth(IAppBuilder app)
         {
+            // Make sure OWIN knows how to create your DbContext, UserManager, and SignInManager
+            app.CreatePerOwinContext(AppIdentityDbContext.Create);
+            app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
+            app.CreatePerOwinContext<AppSignInManager>(AppSignInManager.Create);
+
             // Enable application sign-in cookie
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login"), // Redirect here if not logged in
+                LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider
                 {
-                    // Security Stamp: re-validate the security stamp when user changes password/roles
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<AppUserManager, AppUsers, int>(
-                        validateInterval: TimeSpan.FromMinutes(30),
-                        regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager),
-                        getUserIdCallback: (claim) => int.Parse(claim.GetUserId()))
+                    OnValidateIdentity = SecurityStampValidator
+                        .OnValidateIdentity<AppUserManager, AppUsers, int>(
+                            validateInterval: TimeSpan.FromMinutes(30),
+                            regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager),
+                            getUserIdCallback: (claim) => int.Parse(claim.GetUserId()))
                 }
             });
         }
+
     }
 }

@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-6 bg-light rounded shadow-sm border border-light">
+                <div class="col-6  rounded shadow-sm border border-light">
                     <h3 class="text-primary">Selected Task Details</h3>
                     @if (Model.SelectedTask != null)
                     {
@@ -66,7 +66,7 @@
                     }
                 </div>
                 <div class="col-6">
-                    <div class="bg-light h-100 shadow-sm">
+                    <div class=" h-100 shadow-sm">
                         @using (Html.BeginForm("index", "Task", FormMethod.Post, new { id = "searchForm", @class = "" }))
                         {
                             <div class="row">

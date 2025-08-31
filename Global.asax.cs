@@ -126,14 +126,14 @@ namespace WorkMate
 
         }
 
-        /// <summary>
-        /// Content secuirty policy
-        /// </summary>
-        protected void Application_BeginRequest()
-        {
-            HttpContext.Current.Response.Headers.Add("Content-Security-Policy",
-                "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;");
-        }
+        ///// <summary>
+        ///// Content secuirty policy CSRF
+        ///// </summary>
+        //protected void Application_BeginRequest()
+        //{
+        //    HttpContext.Current.Response.Headers.Add("Content-Security-Policy",
+        //        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;");
+        //}
 
     }
 }
