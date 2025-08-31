@@ -1,0 +1,159 @@
+﻿@model WorkMate.ViewModels.LoginViewModel
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - WorkMate</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/plugins/select2.css" rel="stylesheet" />
+    <link href="~/Content/plugins/iziToast.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+    <div class="container-fluid vh-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white text-center py-4">
+                        <h3 class="mb-0">
+                            <i class="fa fa-sign-in me-2"></i>
+                            Welcome Back
+                        </h3>
+                        <p class="mb-0 mt-2 opacity-75">Sign in to your WorkMate account</p>
+                    </div>
+                    <div class="card-body p-4">
+                        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="mb-4">
+                                @Html.LabelFor(m => m.UsernameOrEmail, new { @class = "form-label fw-semibold" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fa fa-user text-muted"></i>
+                                    </span>
+                                    @Html.TextBoxFor(m => m.UsernameOrEmail, new
+                                    {
+                                        @class = "form-control form-control-lg",
+                                        placeholder = "Enter username or email",
+                                        required = "required"
+                                    })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.UsernameOrEmail, "", new { @class = "text-danger small mt-1" })
+                            </div>
+
+                            <div class="mb-4">
+                                @Html.LabelFor(m => m.Password, new { @class = "form-label fw-semibold" })
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">
+                                        <i class="fa fa-lock text-muted"></i>
+                                    </span>
+                                    @Html.PasswordFor(m => m.Password, new
+                                    {
+                                        @class = "form-control form-control-lg",
+                                        placeholder = "Enter password",
+                                        required = "required"
+                                    })
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small mt-1" })
+                            </div>
+
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">
+                                        Remember me
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-grid mb-3">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fa fa-sign-in me-2"></i>
+                                    Sign In
+                                </button>
+                            </div>
+                        }
+
+                        <div class="text-center">
+                            <a href="#" class="text-decoration-none small">Forgot your password?</a>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light text-center py-3">
+                        <p class="mb-0 text-muted small">
+                            Don't have an account?
+                            <a href="@Url.Action("Register", "Account")" class="text-primary text-decoration-none fw-semibold">
+                                Create one here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/plugins/select2.js"></script>
+    <script src="~/Scripts/plugins/iziToast.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Toggle password visibility
+            $('#togglePassword').on('click', function() {
+                const passwordField = $('#Password');
+                const icon = $(this).find('i');
+
+                if (passwordField.attr('type') === 'password') {
+                    passwordField.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+            // Form validation
+            $('form.needs-validation').on('submit', function(e) {
+                if (!this.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                $(this).addClass('was-validated');
+            });
+        });
+
+        // Function to display iziToast notifications
+        function showToast(type, message, title = '') {
+            iziToast[type]({
+                title: title,
+                message: message,
+                position: 'topRight',
+                timeout: 5000,
+                progressBar: true,
+                transitionIn: 'fadeInLeft',
+                transitionOut: 'fadeOutRight'
+            });
+        }
+
+        // Check for TempData messages on page load and display them as toasts
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastMessage = '@TempData["ToastMessage"]';
+            var toastType = '@TempData["ToastType"]';
+            var toastTitle = '@TempData["ToastTitle"]';
+
+            if (toastMessage && toastType) {
+                showToast(toastType.toLowerCase(), toastMessage, toastTitle);
+            }
+        });
+    </script>
+</body>
+</html>

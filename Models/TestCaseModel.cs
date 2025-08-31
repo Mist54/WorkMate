@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WorkMate.ViewModels;
 
 namespace WorkMate.Models
 {
-    public enum TestCaseType { Functional, Performance, Security, Regression, Integration, Other }
-    public enum TestCasePriority { Low, Medium, High, Critical }
-    public enum TestCaseStatus { Other,Passed, Failed}
+    public enum TestCaseType { Functional, Performance, Security, Regression, Integration, Other } // Starts as 0,1,2,3,4...
+    public enum TestCasePriority { Low, Medium, High, Critical }// Starts as 0,1,2,3,4...
+    public enum TestCaseStatus { Other,Passed, Failed }//Starts as 0,1,2,3,4...
 
     public class TestCaseModel
     {

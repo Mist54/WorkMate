@@ -32,8 +32,8 @@
             $("#TestCaseName").val("");
         }
 
-      
-      
+
+
 
         if (selectedValue != null) {
             $.ajax({
@@ -41,7 +41,7 @@
                 type: 'GET',
                 data: { id: selectedValue, testcaseName: "" },
                 success: function (partialViewHtml) {
-                   
+
                     $("#testCaseTableContainer").html(partialViewHtml);
                 },
                 error: function (xhr, status, error) {
@@ -63,7 +63,7 @@ function setDeleteId(deleteId) {
         hiddenInput.value = deleteId;
     }
 
-   
+
 }
 function confirmAndDelete() {
     // Submit the form directly

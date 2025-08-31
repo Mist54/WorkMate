@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-6">
                     <div class="bg-light h-100 shadow-sm">
-                        @using (Html.BeginForm("index","Task",FormMethod.Post,new { id="searchForm",@class=""}))
+                        @using (Html.BeginForm("index", "Task", FormMethod.Post, new { id = "searchForm", @class = "" }))
                         {
                             <div class="row">
                                 <div class="col-4">
@@ -104,7 +104,7 @@
                         }
 
 
-                        <div class="table-responsive">
+                        <div class="table-responsive  slim-scrollbar">
                             <table class="table table-hover table-striped table-bordered overflow-hidden">
                                 <thead class="table-dark">
                                     <tr>
@@ -223,7 +223,8 @@
                     <div class="modal-body text-center">
                         <p class="lead mb-3">Are you sure you want to delete Task: <strong id="itemToDeleteNamePlaceholder">@Model.SelectedTask.TaskName</strong>?</p>
                         <p class="text-danger">This action cannot be undone.</p>
-                        @Html.Hidden("taskId", Model.SelectedTask.TaskId)
+                        @Html.Hidden("taskId", WorkMate.Helpers.Encryptor.EncryptUrlSafe(Model.SelectedTask.TaskId.ToString()))
+
                     </div>
                 }
 

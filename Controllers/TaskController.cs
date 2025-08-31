@@ -160,15 +160,30 @@ namespace WorkMate.Controllers
         {
             try
             {
-                if (ModelState.IsValid && !string.IsNullOrEmpty(model.NewTask.TaskName.Trim()) && 
+                if (ModelState.IsValid && !string.IsNullOrEmpty(model.NewTask.TaskName.Trim()) &&
                     !string.IsNullOrEmpty(model.NewTask.TaskDescription.Trim()))
                 {
-                    TaskModel createTask = new TaskModel(model.NewTask.TaskName.Trim(),
-                        model.NewTask.TaskDescription.Trim());
                     using (var db = new AppDbContext())
                     {
+                        // Check if a task with the same name already exists
+                        bool taskExists = db.Tasks.Any(t => t.TaskName.ToLower().Trim() == model.NewTask.TaskName.ToLower().Trim());
+
+                        if (taskExists)
+                        {
+                            TempData["ToastMessage"] = "A task with this name already exists. Please use a different name.";
+                            TempData["ToastType"] = "warning";
+                            TempData["ToastTitle"] = "Duplicate Task Name!";
+                            // Return the view to show the error message and let the user correct it
+                            return View(model);
+                        }
+
+                        // If the task name is unique, proceed with creation
+                        TaskModel createTask = new TaskModel(model.NewTask.TaskName.Trim(),
+                            model.NewTask.TaskDescription.Trim());
+
                         db.Tasks.Add(createTask);
                         int result = db.SaveChanges();
+
                         if (result > 0)
                         {
                             TempData["ToastMessage"] = "Task created successfully!";
@@ -181,18 +196,18 @@ namespace WorkMate.Controllers
                             TempData["ToastType"] = "error";
                             TempData["ToastTitle"] = "Error!";
                         }
-                        return RedirectToAction("Index", new { selectedTaskId = result });
+                        return RedirectToAction("Index", new { selectedTaskId = createTask.TaskId });
                     }
                 }
-                
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
-            return View();
+            return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -248,12 +263,14 @@ namespace WorkMate.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int taskId)
+        public ActionResult Delete(string taskId)
         {
             TasksCombinedViewModel combinedViewModel = new TasksCombinedViewModel();
            
             try
             {
+                int decryptId = Convert.ToInt32(Encryptor.DecryptUrlSafe(taskId));
+
                 using (var db = new AppDbContext())
                 {
                     TaskModel ExsistingTask = db.Tasks.Find(taskId);
@@ -261,6 +278,20 @@ namespace WorkMate.Controllers
                     {
                         ExsistingTask.IsDeleted = true;
                         ExsistingTask.ModifiedDate = DateTime.Now;
+
+                        // Soft delete related testcases
+                        List<TestCaseModel> relatedTestCases = db.TestCases
+                                                 .Where(tc => tc.TaskId == decryptId && !tc.IsDeleted)
+                                                 .ToList();
+                        if (relatedTestCases.Any())
+                        {
+                            foreach (var tc in relatedTestCases)
+                            {
+                                tc.IsDeleted = true;
+                                tc.ModifiedDate = DateTime.Now;
+                            }
+                        }
+
                         db.SaveChanges();
                         TempData["ToastMessage"] = $"Task '{ExsistingTask.TaskName}' deleted successfully!";
                         TempData["ToastType"] = "success";

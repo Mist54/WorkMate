@@ -17,10 +17,8 @@
                 @using (Html.BeginForm("Edit", "TestCase", FormMethod.Post, new { @class = "h-100" }))
                 {
                     @Html.AntiForgeryToken()
-                    @* Hidden key field *@
-                    @Html.HiddenFor(m => m.TestCaseId)
-                    @* Keep TaskId as hidden since it's not editable *@
-                    @Html.HiddenFor(m => m.TaskId)
+                    @Html.HiddenFor(m => m.EncryptedTaskId)
+                    @Html.HiddenFor(m => m.EncryptedTestcaseId)
 
                     <div class="card-body p-4 d-flex flex-column justify-content-between">
                         <div class="row g-3">
@@ -29,11 +27,6 @@
                                     @Html.ValidationSummary(true, "Fix the issues below and resubmit.",
                                         new { @class = "text-danger alert alert-danger p-2 text-center" })
                                 </b>
-                            </div>
-
-                            <!-- Task (Read-only) -->
-                            <div class="col-md-6 d-none">
-                                @Html.HiddenFor(model => model.TaskId, new { @class = "form-label" })
                             </div>
 
                             <!-- Test Case Name -->

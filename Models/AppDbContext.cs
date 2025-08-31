@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 
 namespace WorkMate.Models
 {
@@ -10,6 +6,9 @@ namespace WorkMate.Models
     {
         public AppDbContext() : base("WorkMateConnection") { }
 
+        /// <summary>
+        /// Task and testcases
+        /// </summary>
         //Tables will be defined here 
         public DbSet<TaskModel> Tasks { get; set; }
         public DbSet<TestCaseModel> TestCases { get; set; }
@@ -19,14 +18,14 @@ namespace WorkMate.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+           
+
             //here we will define the names 
             //If explicity not defined it will take the names of the table as same as class name
             modelBuilder.Entity<TaskModel>().ToTable("Tasks");
             modelBuilder.Entity<TestCaseModel>().ToTable("TestCases");
             modelBuilder.Entity<TagModel>().ToTable("Tags");
             modelBuilder.Entity<TestCaseTagModel>().ToTable("TestCaseTags");
-
-            modelBuilder.Entity<TestCaseTagModel>().HasKey(t => new { t.TagId, t.TestCaseId });
             base.OnModelCreating(modelBuilder);
         }
 

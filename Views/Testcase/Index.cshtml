@@ -2,56 +2,150 @@
 @{
     ViewBag.Title = "Index";
 }
-<div class="bg-light rounded rounded-1">
-    <div class="">
-        <div class="d-flex justify-content-end">
-            <div class="">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#downloadModal">
-                    <i class="fa fa-download"></i> Download Testcases
-                </button>
+
+<style>
+    .card-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        }
+
+    .gradient-orange {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    }
+
+    .gradient-green {
+        background: linear-gradient(135deg, #00b894, #00cec9);
+    }
+
+    .gradient-blue {
+        background: linear-gradient(135deg, #0984e3, #74b9ff);
+    }
+
+    .gradient-purple {
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    }
+
+    .gradient-yellow {
+        background: linear-gradient(135deg, #fdcb6e, #e84393);
+    }
+
+    .header-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .stats-icon {
+        opacity: 0.9;
+    }
+</style>
+
+<!-- Enhanced Header -->
+<div class="header-section text-white py-4 px-4 mb-4 rounded-3">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="display-6 fw-bold mb-1">
+                <i class="fa fa-chart-bar me-2"></i>Test Dashboard
+            </h2>
+            <p class="mb-0 opacity-75">Monitor and manage your test cases</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-light btn-lg shadow-sm" data-bs-toggle="modal" data-bs-target="#downloadModal">
+                <i class="fa fa-download text-primary me-2"></i>Download Testcases
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Stats Cards -->
+<div class="row g-4 mt-2">
+    <div class="col-lg-2 col-md-6">
+        <div class="card shadow-lg rounded-3 border-0 card-hover h-100">
+            <div class="card-body text-center text-white rounded-3 gradient-orange p-4">
+                <div class="mb-3">
+                    <i class="fa fa-tasks fa-3x stats-icon"></i>
+                </div>
+                <h6 class="card-title mb-2 text-uppercase fw-semibold">Total Testcase Count</h6>
+                <h1 class="display-4 fw-bold mb-0">@Model.TestCaseCount</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-6">
+        <div class="card shadow-lg rounded-3 border-0 card-hover h-100">
+            <div class="card-body text-center text-white rounded-3 gradient-green p-4">
+                <div class="mb-3">
+                    <i class="fa fa-clipboard fa-3x stats-icon"></i>
+                </div>
+                <h6 class="card-title mb-2 text-uppercase fw-semibold">Total Task Count</h6>
+                <h1 class="display-4 fw-bold mb-0">@Model.TaskCount</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-6">
+        <div class="card shadow-lg rounded-3 border-0 card-hover h-100">
+            <div class="card-body text-center text-white rounded-3 bg-success p-4">
+                <div class="mb-3">
+                    <i class="fa fa-check fa-3x stats-icon"></i>
+                </div>
+                <h6 class="card-title mb-2 text-uppercase fw-semibold">Total Passed Testcase Count</h6>
+                <h1 class="display-4 fw-bold mb-0">@Model.TotalPassedTestcaseCount</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-6">
+        <div class="card shadow-lg rounded-3 border-0 card-hover h-100">
+            <div class="card-body text-center text-white rounded-3 bg-danger p-4">
+                <div class="mb-3">
+                    <i class="fa fa-times fa-3x stats-icon"></i>
+                </div>
+                <h6 class="card-title mb-2 text-uppercase fw-semibold">Total Failed Testcase Count</h6>
+                <h1 class="display-4 fw-bold mb-0">@Model.TotalFailedTestcaseCount</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-6">
+        <div class="card shadow-lg rounded-3 border-0 card-hover h-100">
+            <div class="card-body text-center text-white rounded-3 bg-warning p-4">
+                <div class="mb-3">
+                    <i class="fa fa-warning fa-3x stats-icon"></i>
+                </div>
+                <h6 class="card-title mb-2 text-uppercase fw-semibold">Total Pending Testcase Count</h6>
+                <h1 class="display-4 fw-bold mb-0">@Model.TotalOtherTestcaseCount</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-6">
+        <div class="card shadow-lg rounded-3 border-0 card-hover h-100">
+            <div class="card-body text-center text-white rounded-3 gradient-purple p-4">
+                <div class="mb-3">
+                    <i class="fa fa-chart-pie fa-3x stats-icon"></i>
+                </div>
+                <h6 class="card-title mb-2 text-uppercase fw-semibold">Success Rate</h6>
+                <h1 class="display-4 fw-bold mb-0">
+                    @{
+                        var rate = Model.TestCaseCount > 0 ? Math.Round(((double)Model.TotalPassedTestcaseCount / Model.TestCaseCount) * 100) : 0;
+                    }
+                    @rate%
+                </h1>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row mt-4">
-    <div class="col-3">
-        <div class="card shadow-lg rounded-3 border-0">
-            <div class="card-body text-center text-white rounded-3" style="background: linear-gradient(135deg, #ff512f, #dd2476); position: relative; overflow: hidden; transition: transform 0.3s;">
-                <div class="mb-2">
-                    <i class="fa fa-tasks fa-3x"></i>
-                </div>
-                <h5 class="card-title mb-1">Testcase Count</h5>
-                <h2 class="fw-bold animate-hover">@Model.TestCaseCount</h2>
-                
-            </div>
-        </div>
-    </div>
-    <div class="col-3">
-        <div class="card shadow-lg rounded-3 border-0">
-            <div class="card-body text-center text-white rounded-3" style="background: linear-gradient(135deg, #11998e, #38ef7d); position: relative; overflow: hidden; transition: transform 0.3s;">
-                <div class="mb-2">
-                    <i class="fa fa-clipboard fa-3x"></i>
-                </div>
-                <h5 class="card-title mb-1">Task Count</h5>
-                <h2 class="fw-bold animate-hover">@Model.TaskCount</h2>
-               
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-@*Download Testcase file*@
+@*Download Testcase file *@
 <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="modal-title" id="downloadModalLabel">Download Testcase</h5>
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="downloadModalLabel">Download Testcase</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 

@@ -1,17 +1,13 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Office2021.DocumentTasks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Mvc;
 using WorkMate.Models;
 using WorkMate.Services;
 using WorkMate.ViewModels;
 using System.Data.Entity;
-using System.Diagnostics;
-using DocumentFormat.OpenXml.Office2013.PowerPoint;
+using WorkMate.Helpers;
 
 namespace WorkMate.Controllers
 {
@@ -233,15 +229,21 @@ namespace WorkMate.Controllers
         }
 
         [HttpGet]
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
             try
             {
+                int decryptedId = Convert.ToInt32(Encryptor.DecryptUrlSafe(id));
+                if (decryptedId <= 0)
+                {
+                    return RedirectToAction("Index");
+                }
+
                 using (var db = new AppDbContext())
                 {
                     TestCaseModel testcaseToEdit = db.TestCases
                                  .Include(tc => tc.Task)
-                                 .FirstOrDefault(tc => tc.TestCaseId == id);
+                                 .FirstOrDefault(tc => tc.TestCaseId == decryptedId);
 
                     if (testcaseToEdit == null)
                     {
@@ -269,6 +271,8 @@ namespace WorkMate.Controllers
         {
             try
             {
+                model.TaskId = Convert.ToInt32(Encryptor.DecryptUrlSafe(model.EncryptedTaskId.ToString()));
+                model.TestCaseId = Convert.ToInt32(Encryptor.DecryptUrlSafe(model.EncryptedTestcaseId.ToString()));
                 if (!ModelState.IsValid)
                 {
                     // reload Task info in case validation fails
@@ -352,23 +356,8 @@ namespace WorkMate.Controllers
             if (testCaseModel == null) return null;
             List<TestCaseModel> testcases = getAllTestcases(testCaseModel.TaskId);
 
-            return new TestCaseViewModel
-            {
-                TaskId = testCaseModel.TaskId,
-                TaskName = testCaseModel.Task != null ? testCaseModel.Task.TaskName : string.Empty,
-                TaskDescription = testCaseModel.Task != null ? testCaseModel.Task.TaskDescription : string.Empty,
-                TestCaseId = testCaseModel.TestCaseId,
-                TestCaseName = testCaseModel.TestCaseName,
-                Preconditions = testCaseModel.Preconditions,
-                Steps = testCaseModel.Steps,
-                ExpectedResult = testCaseModel.ExpectedResult,
-                Priority = testCaseModel.Priority,
-                Type = testCaseModel.Type,
-                Notes = testCaseModel.Notes,
-                TestCaseStatus = testCaseModel.TestCaseStatus,
-                AllTestCases = testcases
-
-            };
+            return new TestCaseViewModel(testCaseModel, testcases);
+            
         }
 
 
@@ -533,7 +522,7 @@ namespace WorkMate.Controllers
                     // Include Task via navigation property
                     var lstTestcases = db.TestCases
                      .Include(t => t.Task)   // eager load navigation
-                     .Where(t => !t.IsDeleted)
+                     .Where(t => !t.IsDeleted && t.TaskId == taskId)
                      .OrderByDescending(t => t.CreatedDate)
                      .ToList();
 

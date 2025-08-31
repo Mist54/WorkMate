@@ -14,10 +14,11 @@ namespace WorkMate.ViewModels
     /// </summary>
     public class TestCaseViewModel
     {
-        [Required]
+        
         [DisplayName("Task")]
         public int TaskId { get; set; }
 
+        public string EncryptedTaskId { get; set; } 
         
         [DisplayName("Task name")]
         public string TaskName { get; set; }
@@ -28,6 +29,7 @@ namespace WorkMate.ViewModels
        
         public int TestCaseId { get; set; }
 
+        public string EncryptedTestcaseId { get;set; }
 
         [DisplayName("Testcase name")]
         [Required, StringLength(200)]
@@ -112,9 +114,14 @@ namespace WorkMate.ViewModels
                 throw new ArgumentNullException(nameof(model));
 
             TaskId = model.TaskId;
+            EncryptedTaskId = WorkMate.Helpers.Encryptor.EncryptUrlSafe(model.TaskId.ToString());
+
             TaskName = model.Task?.TaskName?.Trim();
             TaskDescription = model.Task?.TaskDescription?.Trim();
+
             TestCaseId = model.TestCaseId;
+            EncryptedTestcaseId = WorkMate.Helpers.Encryptor.EncryptUrlSafe(model.TestCaseId.ToString());
+
             TestCaseName = model.TestCaseName?.Trim();
             TestCaseTimeStamp = model.TestCaseTimeStamp;
             Preconditions = model.Preconditions?.Trim();
@@ -130,8 +137,41 @@ namespace WorkMate.ViewModels
             ModifiedDate = model.ModifiedDate;
             ModifiedBy = model.ModifiedBy?.Trim();
             IsDeleted = model.IsDeleted;
-
         }
+
+        public TestCaseViewModel(TestCaseModel model,List<TestCaseModel> lstTestcases)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            TaskId = model.TaskId;
+            EncryptedTaskId = WorkMate.Helpers.Encryptor.EncryptUrlSafe(model.TaskId.ToString());
+
+            TaskName = model.Task?.TaskName?.Trim();
+            TaskDescription = model.Task?.TaskDescription?.Trim();
+
+            TestCaseId = model.TestCaseId;
+            EncryptedTestcaseId = WorkMate.Helpers.Encryptor.EncryptUrlSafe(model.TestCaseId.ToString());
+
+            TestCaseName = model.TestCaseName?.Trim();
+            TestCaseTimeStamp = model.TestCaseTimeStamp;
+            Preconditions = model.Preconditions?.Trim();
+            Steps = model.Steps?.Trim();
+            ExpectedResult = model.ExpectedResult?.Trim();
+            ActualResult = model.ActualResult?.Trim();
+            Type = model.Type;
+            Priority = model.Priority;
+            TestCaseStatus = model.TestCaseStatus;
+            Notes = model.Notes?.Trim();
+            CreatedBy = model.CreatedBy?.Trim();
+            CreatedDate = model.CreatedDate;
+            ModifiedDate = model.ModifiedDate;
+            ModifiedBy = model.ModifiedBy?.Trim();
+            IsDeleted = model.IsDeleted;
+            AllTestCases = lstTestcases; //Fills the relavent testcases
+            
+        }
+
 
         /// <summary>
         /// Converts this ViewModel back into a TestCaseModel for saving to the database.
@@ -156,7 +196,8 @@ namespace WorkMate.ViewModels
                 CreatedDate = this.CreatedDate,
                 ModifiedDate = this.ModifiedDate,
                 ModifiedBy = this.ModifiedBy?.Trim(),
-                IsDeleted = this.IsDeleted
+                IsDeleted = this.IsDeleted,
+                
 
             };
 
