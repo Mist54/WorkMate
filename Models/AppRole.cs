@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WorkMate.Models
 {
-    public class Role : IdentityRole<int, UserRole>
+    public class AppRole : IdentityRole<int, UserRole>
     {
         [NotMapped]
         public int RoleId { get; set; }

@@ -5,19 +5,15 @@
 
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="card-title">
-                    <h3>Task Overview</h3>
-                </div>
-                <button type="button" class="btn btn-primary  px-4 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#createTaskModal">
-                    <i class="fa fa-plus-circle"></i> Create New Task
-                </button>
-            </div>
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+            <h4>Task Overview</h4>
+            <button type="button" class="btn btn-dark  px-4 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                <i class="fa fa-plus-circle mx-2"></i> Create New Task
+            </button>
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-6  rounded shadow-sm border border-light">
+                <div class="col-6 shadow-sm">
                     <h3 class="text-primary">Selected Task Details</h3>
                     @if (Model.SelectedTask != null)
                     {
@@ -65,15 +61,16 @@
                         </div>
                     }
                 </div>
+                
                 <div class="col-6">
-                    <div class=" h-100 shadow-sm">
+                    <div class="">
                         @using (Html.BeginForm("index", "Task", FormMethod.Post, new { id = "searchForm", @class = "" }))
                         {
-                            <div class="row">
+                            <div class="row justify-content-between align-items-center">
                                 <div class="col-4">
-                                    <h3 class="text-primary mb-3 my-2">All Available Tasks</h3>
+                                    <h3 class="text-primary mb-3 my-2">Task List</h3>
                                 </div>
-                                <div class="col-8 my-2">
+                                <div class="col-8">
                                     <div class="input-group">
                                         <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="searchTypeButton" name="searchType">
                                             Exact Search
@@ -97,15 +94,13 @@
                                         @Html.Hidden("searchType", "exact", new { id = "hdnSearchType" })
                                     </div>
                                 </div>
-
-
                             </div>
 
                         }
 
 
                         <div class="table-responsive  slim-scrollbar">
-                            <table class="table table-hover table-striped table-bordered overflow-hidden">
+                            <table class="table table-hover table-striped overflow-hidden">
                                 <thead class="table-dark">
                                     <tr>
                                         <th scope="col">ID</th>
@@ -140,7 +135,7 @@
                                     else
                                     {
                                         <tr class="text-warning text-center">
-                                            <td colspan="4">No data found.</td>
+                                            <td colspan="4"><i class="fa fa-warning mx-2"></i>No data found.</td>
                                         </tr>
                                     }
 

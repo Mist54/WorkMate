@@ -8,6 +8,7 @@
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Content/plugins/select2.css" rel="stylesheet" />
     <link href="~/Content/plugins/iziToast.css" rel="stylesheet" />
+    <link href="~/Content/plugins/flatdatepicker.css" rel="stylesheet" />
     <link href="~/Content/font-awesome.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
     <style>
@@ -46,6 +47,17 @@
         [data-bs-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__arrow b {
             border-color: var(--bs-body-color) transparent transparent transparent;
         }
+
+        /* Default (light) */
+        .flatpickr-calendar {
+            /* light theme overrides already in flatdatepicker.css */
+        }
+
+        /* Dark mode */
+        body.dark-mode .flatpickr-calendar {
+            /* dark theme overrides from flatdatepickerdark.css */
+        }
+
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -88,6 +100,11 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-semibold nav-menu-item" data-nav="Track Time" aria-current="page" href="@Url.Action("Index","TimeTracking")">
+                            <i class="fa fa-clock-o me-1"></i>Track Time
+                        </a>
+                    </li>
                 </ul>
                 <div class="navbar-nav">
                     <div class="nav-item dropdown">
@@ -104,7 +121,8 @@
                                         <i class="fa fa-sign-out me-2"></i> Logout
                                     </button>
                                 }
-                            </li> <li><hr class="dropdown-divider"></li>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
                             <!-- Dark Mode Toggle Button -->
                             <li>
                                 <a class="dropdown-item d-flex align-items-center" href="#" id="themeToggle" role="button">
@@ -143,6 +161,7 @@
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
     <script src="~/Scripts/plugins/select2.js"></script>
     <script src="~/Scripts/plugins/iziToast.js"></script>
+    <script src="~/Scripts/plugins/flatdatepicker.js"></script>
 
     @RenderSection("scripts", required: false)
     <script>

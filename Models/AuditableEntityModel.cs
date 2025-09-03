@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WorkMate.Models
 {
-    public abstract class AuditableEntity
+    public abstract class AuditableEntityModel
     {
-        [Required]
+        //[Required]
         public string CreatedBy { get; set; }
 
         [Required]

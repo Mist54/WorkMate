@@ -9,7 +9,7 @@ namespace WorkMate.Models
     /// <summary>
     /// This class is resposnible for read/write using user and roles
     /// </summary>
-    public class AppUserStore: UserStore<AppUsers, Role, int, UserLogin, UserRole, UserClaim>
+    public class AppUserStore: UserStore<AppUsers, AppRole, int, UserLogin, UserRole, UserClaim>
     {
         public AppUserStore(AppIdentityDbContext context) : base(context)
         {

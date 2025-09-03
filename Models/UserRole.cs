@@ -14,7 +14,7 @@ namespace WorkMate.Models
         public virtual AppUsers User { get; set; }
 
         [ForeignKey("RoleId")]
-        public virtual Role Role { get; set; }
+        public virtual AppRole Role { get; set; }
 
         [Required]
         public string CreatedBy { get; set; }

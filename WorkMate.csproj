@@ -204,6 +204,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TestcaseController.cs" />
+    <Compile Include="Controllers\TimeTrackingController.cs" />
     <Compile Include="Filters\RequiredIfAttribute.cs" />
     <Compile Include="Filters\ValidateJsonAntiForgeryTokenAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -219,10 +220,11 @@
     <Compile Include="Models\AppUserManager.cs" />
     <Compile Include="Models\AppUserRepository.cs" />
     <Compile Include="Models\AppUserStore.cs" />
-    <Compile Include="Models\AuditableEntity.cs" />
+    <Compile Include="Models\AuditableEntityModel.cs" />
     <Compile Include="Models\AppIdentityDbContext.cs" />
+    <Compile Include="Models\TimeTrackModel.cs" />
     <Compile Include="Models\UserClaim.cs" />
-    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\TaskModel.cs" />
     <Compile Include="Models\TestCaseModel.cs" />
     <Compile Include="Models\UserLogin.cs" />
@@ -235,11 +237,13 @@
     <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="ViewModels\TestcaseViewModel.cs" />
     <Compile Include="ViewModels\TestIndexViewModal.cs" />
+    <Compile Include="ViewModels\TimeTrackingViewModal.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\plugins\flatdatepicker.css" />
     <Content Include="Content\plugins\iziToast.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -267,10 +271,12 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Content\plugins\select2.css" />
+    <Content Include="Scripts\plugins\flatdatepicker.js" />
     <Content Include="Scripts\plugins\iziToast.js" />
     <Content Include="Scripts\plugins\select2.js" />
     <Content Include="Scripts\Task.js" />
     <Content Include="Scripts\Testcase.js" />
+    <Content Include="Scripts\TimeTracking.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -296,6 +302,7 @@
     <Content Include="Views\Testcase\Edit.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\TimeTracking\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

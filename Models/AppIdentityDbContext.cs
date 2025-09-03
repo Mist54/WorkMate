@@ -3,7 +3,7 @@ using System.Data.Entity;
 
 namespace WorkMate.Models
 {
-    public class AppIdentityDbContext : IdentityDbContext<AppUsers, Role, int, UserLogin, UserRole, UserClaim>
+    public class AppIdentityDbContext : IdentityDbContext<AppUsers, AppRole, int, UserLogin, UserRole, UserClaim>
     {
         public AppIdentityDbContext() : base("WorkMateConnection") { }
 
@@ -36,7 +36,7 @@ namespace WorkMate.Models
 
             // (Optional) custom table names — do it HERE (not in AppDbContext)
             modelBuilder.Entity<AppUsers>().ToTable("AppUsers");     
-            modelBuilder.Entity<Role>().ToTable("Roles");         
+            modelBuilder.Entity<AppRole>().ToTable("Roles");         
             modelBuilder.Entity<UserRole>().ToTable("UserRoles"); 
             modelBuilder.Entity<UserLogin>().ToTable("UserLogins");
             modelBuilder.Entity<UserClaim>().ToTable("UserClaims");
