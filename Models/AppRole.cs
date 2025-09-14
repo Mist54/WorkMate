@@ -8,9 +8,7 @@ namespace WorkMate.Models
 {
     public class AppRole : IdentityRole<int, UserRole>
     {
-        [NotMapped]
-        public int RoleId { get; set; }
-
+        
         [Required, StringLength(50)]
         [NotMapped] // map to IdentityRole.Name
         public string RoleName

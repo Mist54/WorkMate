@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using WorkMate.ViewModels;
 
 namespace WorkMate.Models
 {
@@ -43,9 +44,28 @@ namespace WorkMate.Models
 
         [ForeignKey("TaskId")]
         public virtual TaskModel Task { get; set; }
-
         [ForeignKey("UserId")]
-        public virtual AppUsers User { get; set; }
+        public virtual AppUsers AppUsers { get; set; }
+
+       
+        public TimeTrackModel()
+        {
+
+        }
+
+        public TimeTrackModel(TimeTrackingViewModel model, int loggedInUserId, string loggedInUserName)
+        {
+            this.TaskId = model.TaskId;
+            this.UserId = loggedInUserId;
+            this.Description = model.Description;
+            this.StartDate = model.StartDate;
+            this.EndDate = model.EndDate;
+            this.Status = model.Status;
+            this.IsManual = model.IsManual;
+            this.CreatedBy = loggedInUserName;
+            this.UpdatedBy = loggedInUserName;
+
+        }
 
 
     }

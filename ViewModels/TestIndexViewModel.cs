@@ -7,7 +7,7 @@ using WorkMate.Models;
 
 namespace WorkMate.ViewModels
 {
-    public class TestIndexViewModal
+    public class TestIndexViewModel
     {
         // Public properties for the main lists and counts
         public List<TaskModel> Tasks { get; private set; }
@@ -30,7 +30,7 @@ namespace WorkMate.ViewModels
         public int PassedTestcaseCount { get; set; } = 0;
         public int OtherTestcaseCount { get; set; } = 0;
 
-        public TestIndexViewModal(List<TaskModel> tasks, List<TestCaseModel> testCases)
+        public TestIndexViewModel(List<TaskModel> tasks, List<TestCaseModel> testCases)
         {
             Tasks = tasks ?? new List<TaskModel>();
             TestCases = testCases ?? new List<TestCaseModel>();

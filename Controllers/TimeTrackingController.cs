@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using WorkMate.Models;
 using WorkMate.ViewModels;
@@ -11,33 +11,41 @@ namespace WorkMate.Controllers
     [Authorize]
     public class TimeTrackingController : Controller
     {
-       
         // GET: TimeTracking
         public ActionResult Index()
         {
-            List<TaskModel> tasks = getAllTask();
-            TimeTrackingListViewModel newTimeTracking = new TimeTrackingListViewModel(tasks);
-            return View(newTimeTracking);
+           return View();
         }
+        #region Toaster Methods
 
-        private List<TaskModel> getAllTask()
+        private void SetSuccessToast(string message, string title)
         {
-            try
-            {
-                List<TaskModel> AllTasks = new List<TaskModel>();
-                using (var db = new AppDbContext())
-                {
-
-                    AllTasks = db.Tasks.Where(t => !t.IsDeleted).OrderByDescending(t => t.CreatedDate).ToList();
-                }
-
-                return AllTasks;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
+            TempData["ToastMessage"] = message;
+            TempData["ToastTitle"] = title;
+            TempData["ToastType"] = "success";
         }
+
+        private void SetErrorToast(string message, string title)
+        {
+            TempData["ToastMessage"] = message;
+            TempData["ToastTitle"] = title;
+            TempData["ToastType"] = "error";
+        }
+
+        private void SetWarningToast(string message, string title)
+        {
+            TempData["ToastMessage"] = message;
+            TempData["ToastTitle"] = title;
+            TempData["ToastType"] = "warning";
+        }
+
+        private void SetInfoToast(string message, string title)
+        {
+            TempData["ToastMessage"] = message;
+            TempData["ToastTitle"] = title;
+            TempData["ToastType"] = "info";
+        }
+
+        #endregion
     }
 }

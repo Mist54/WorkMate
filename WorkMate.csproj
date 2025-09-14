@@ -200,8 +200,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TestcaseController.cs" />
     <Compile Include="Controllers\TimeTrackingController.cs" />
@@ -213,7 +215,14 @@
     <Compile Include="Helpers\TrieSearch.cs" />
     <Compile Include="Helpers\Encryptor.cs" />
     <Compile Include="Interface\IExcelExportService.cs" />
-    <Compile Include="Migrations\AppIdentityMigrations\Configuration.cs" />
+    <Compile Include="Migrations\202509131110316_IntialMigration.cs" />
+    <Compile Include="Migrations\202509131110316_IntialMigration.Designer.cs">
+      <DependentUpon>202509131110316_IntialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202509131537306_UpdateAppUsersAndIdentitySchema.cs" />
+    <Compile Include="Migrations\202509131537306_UpdateAppUsersAndIdentitySchema.Designer.cs">
+      <DependentUpon>202509131537306_UpdateAppUsersAndIdentitySchema.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\AppSignInManager.cs" />
@@ -221,7 +230,6 @@
     <Compile Include="Models\AppUserRepository.cs" />
     <Compile Include="Models\AppUserStore.cs" />
     <Compile Include="Models\AuditableEntityModel.cs" />
-    <Compile Include="Models\AppIdentityDbContext.cs" />
     <Compile Include="Models\TimeTrackModel.cs" />
     <Compile Include="Models\UserClaim.cs" />
     <Compile Include="Models\AppRole.cs" />
@@ -232,12 +240,14 @@
     <Compile Include="Models\AppUsers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ExcelExportService.cs" />
+    <Compile Include="ViewModels\AdminViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\RegisterViewModel.cs" />
+    <Compile Include="ViewModels\RoleViewModel.cs" />
     <Compile Include="ViewModels\TaskViewModel.cs" />
     <Compile Include="ViewModels\TestcaseViewModel.cs" />
-    <Compile Include="ViewModels\TestIndexViewModal.cs" />
-    <Compile Include="ViewModels\TimeTrackingViewModal.cs" />
+    <Compile Include="ViewModels\TestIndexViewModel.cs" />
+    <Compile Include="ViewModels\TimeTrackingViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.min.css" />
@@ -303,6 +313,12 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\TimeTracking\Index.cshtml" />
+    <Content Include="Views\Role\Index.cshtml" />
+    <Content Include="Views\Admin\UserIndex.cshtml" />
+    <Content Include="Views\Admin\UserEdit.cshtml" />
+    <Content Include="Views\Admin\UserDetails.cshtml" />
+    <Content Include="Views\Admin\UserDelete.cshtml" />
+    <Content Include="Views\Admin\UserCreate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -313,6 +329,17 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202509131110316_IntialMigration.resx">
+      <DependentUpon>202509131110316_IntialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202509131537306_UpdateAppUsersAndIdentitySchema.resx">
+      <DependentUpon>202509131537306_UpdateAppUsersAndIdentitySchema.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

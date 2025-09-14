@@ -7,8 +7,7 @@ using WorkMate.Models;
 
 namespace WorkMate.ViewModels
 {
-    public enum TaskStatus { Open, InProgress, Completed }
-
+   
     public class TimeTrackingViewModel
     {
         public int Id { get; set; }
@@ -58,6 +57,15 @@ namespace WorkMate.ViewModels
         [Display(Name = "Manual tracking?")]
         public bool IsManual { get; set; } = true;
 
+        /// <summary>
+        /// Its important to have a default constructor 
+        /// </summary>
+        public TimeTrackingViewModel()
+        {
+           
+
+        }
+
        
     }
 
@@ -70,13 +78,13 @@ namespace WorkMate.ViewModels
         public TimeTrackingViewModel NewRecord { get; set; }
             = new TimeTrackingViewModel();
 
+
         public IEnumerable<SelectListItem> DdlTasks { get; set; }
 
-        public List<TestCaseModel> AllTestCases { get; set; }
-
-        public TimeTrackingListViewModel(List<TaskModel> tasks)
+        public TimeTrackingListViewModel(List<TaskModel> tasks,List<TimeTrackModel> timeTracks)
         {
             FillAllTasks(tasks);
+
         }
 
         private void FillAllTasks(List<TaskModel> lstTasks)
@@ -93,6 +101,30 @@ namespace WorkMate.ViewModels
             }).ToList();
         }
 
+        private void FillAllTimeTracks(List<TimeTrackModel> timeTracks)
+        {
+            foreach(var tracks in timeTracks)
+            {
+                TimeTrackingViewModel timeTrackingViewModel = new TimeTrackingViewModel
+                {
+                    Id = tracks.Id,
+                    TaskId = tracks.TaskId,
+                    TaskName = tracks.Task.TaskName,
+                    UserId = tracks.UserId,
+
+                };
+
+                
+            }
+        }
+
+        /// <summary>
+        /// Its important to have a default constructor 
+        /// </summary>
+        public TimeTrackingListViewModel()
+        {
+
+        }
     }
 
 

@@ -17,5 +17,7 @@ namespace WorkMate.Models
 
         public bool IsDeleted { get; set; } = false; 
 
+        public AuditableEntityModel() { }
+
     }
 }

@@ -42,9 +42,11 @@
                                         <button type="submit" class="btn btn-success">
                                             <i class="fa fa-save me-2"></i> Save changes
                                         </button>
+
                                         <button type="button" class="btn btn-danger" id="btnShowDeleteModal" onclick="showDeleteModal()">
                                             <i class="fa fa-trash me-2"></i>Delete task
                                         </button>
+
                                     </div>
                                 </div>
 
@@ -61,7 +63,7 @@
                         </div>
                     }
                 </div>
-                
+
                 <div class="col-6">
                     <div class="">
                         @using (Html.BeginForm("index", "Task", FormMethod.Post, new { id = "searchForm", @class = "" }))

@@ -1,5 +1,4 @@
 ﻿$(document).ready(function () {
-
     // When modal opens
     $('#createModal').on('shown.bs.modal', function () {
         // Init Select2
@@ -23,4 +22,25 @@
             time_24hr: true
         });
     });
+
+    $("#btnCreateNewTrack").on("click", function (e) {
+        e.preventDefault();
+
+        let form = $(this).closest("form");
+
+        let description = $("#NewRecord_Description").val();
+
+        let descError = $('#descError.invalid-feedback');
+
+        // Check the character length
+        if (description.length < 10) {
+            
+            descError.text('The Description should be at least 10 characters long.').show();
+        } else {
+            
+            descError.hide();
+            form.submit();
+        }
+    });
 });
+

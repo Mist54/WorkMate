@@ -12,11 +12,7 @@ namespace WorkMate.Models
 {
     public class AppUsers: IdentityUser<int, UserLogin, UserRole, UserClaim>
     {
-        [NotMapped]
-        public int UserId  { get; set; }
-
-        [NotMapped]
-        public string Username { get; set; }
+        
 
         [StringLength(256)]
         public string PasswordSalt { get; set; }  
@@ -41,9 +37,6 @@ namespace WorkMate.Models
         public DateTime? ModifiedDate { get; set; }
 
         public bool IsDeleted { get; set; } = false;
-
-        
-        public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<AppUsers, int> manager)
         {

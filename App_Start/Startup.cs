@@ -20,7 +20,7 @@ namespace WorkMate.App_Start
         public void ConfigureAuth(IAppBuilder app)
         {
             // Make sure OWIN knows how to create your DbContext, UserManager, and SignInManager
-            app.CreatePerOwinContext(AppIdentityDbContext.Create);
+            app.CreatePerOwinContext(AppDbContext.Create);
             app.CreatePerOwinContext<AppUserManager>(AppUserManager.Create);
             app.CreatePerOwinContext<AppSignInManager>(AppSignInManager.Create);
 

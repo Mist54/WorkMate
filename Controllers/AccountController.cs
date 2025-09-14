@@ -1,12 +1,7 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Host.SystemWeb;
 using Microsoft.Owin.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -60,7 +55,7 @@ namespace WorkMate.Controllers
         // GET: Account
         public ActionResult Index()
         {
-           return RedirectToAction("Login");
+            return RedirectToAction("Login");
         }
 
         public ActionResult Login()
@@ -103,7 +98,7 @@ namespace WorkMate.Controllers
 
         public ActionResult Register()
         {
-            return View(new RegisterViewModel());  
+            return View(new RegisterViewModel());
         }
 
         [HttpPost]
@@ -126,8 +121,16 @@ namespace WorkMate.Controllers
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                 return RedirectToAction("Index", "Home");
             }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
 
-            AddErrors(result);
+            }
+
+           
             return View(registration);
         }
 
@@ -138,16 +141,5 @@ namespace WorkMate.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Login", "Account");
         }
-
-
-        #region Helpers
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
-        #endregion
     }
 }

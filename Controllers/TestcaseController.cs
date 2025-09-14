@@ -22,7 +22,7 @@ namespace WorkMate.Controllers
                 List<TestCaseModel> testCases = new List<TestCaseModel>();
                 tasks = getAllTask();
                 testCases = getAllTestcases();
-                TestIndexViewModal testIndexViewModal = new TestIndexViewModal(tasks, testCases);
+                TestIndexViewModel testIndexViewModal = new TestIndexViewModel(tasks, testCases);
                 return View(testIndexViewModal);
             }
             catch (Exception ex)

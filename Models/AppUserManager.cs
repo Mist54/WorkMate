@@ -36,7 +36,7 @@ namespace WorkMate.Models
 
         public static AppUserManager Create()
         {
-            var context = AppIdentityDbContext.Create();
+            var context = AppDbContext.Create();
             var manager = new AppUserManager(new AppUserStore(context));
 
             // Configure 2FA with email or SMS if needed 

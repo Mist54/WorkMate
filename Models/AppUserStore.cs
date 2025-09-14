@@ -11,7 +11,7 @@ namespace WorkMate.Models
     /// </summary>
     public class AppUserStore: UserStore<AppUsers, AppRole, int, UserLogin, UserRole, UserClaim>
     {
-        public AppUserStore(AppIdentityDbContext context) : base(context)
+        public AppUserStore(AppDbContext context) : base(context)
         {
             /*It handles the CRUD (Create, Read, Update, Delete) operations for users, 
              * roles, logins, and claims. Instead of writing custom database queries, 
