@@ -319,6 +319,10 @@
     <Content Include="Views\Admin\UserDetails.cshtml" />
     <Content Include="Views\Admin\UserDelete.cshtml" />
     <Content Include="Views\Admin\UserCreate.cshtml" />
+    <Content Include="Views\Admin\RoleIndex.cshtml" />
+    <Content Include="Views\Admin\RoleCreate.cshtml" />
+    <Content Include="Views\Admin\RoleEdit.cshtml" />
+    <Content Include="Views\Admin\RoleDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

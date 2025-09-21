@@ -38,10 +38,8 @@
                                                <a href="@Url.Action("UserEdit", "Admin", new { id = user.Id })" class="btn btn-sm btn-primary">
                                                    <i class="fa fa-edit"></i> Edit
                                                </a>
-                                               <a href="@Url.Action("Details", "Admin", new { id = user.Id })" class="btn btn-sm btn-info">
-                                                   <i class="fa fa-eye"></i> View
-                                               </a>
-                                               <a href="@Url.Action("Delete", "Admin", new { id = user.Id })" class="btn btn-sm btn-danger">
+                                              
+                                               <a href="@Url.Action("UserDelete", "Admin", new { id = user.Id })" class="btn btn-sm btn-danger">
                                                    <i class="fa fa-trash"></i> Delete
                                                </a>
                                            </td>

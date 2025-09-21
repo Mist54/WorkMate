@@ -104,7 +104,6 @@
                             <i class="fa fa-clock-o me-1"></i>Track Time
                         </a>
                     </li>
-
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle fw-semibold nav-menu-item" data-nav="testerdev" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-user-circle-o me-1"></i>Admin pages
@@ -117,20 +116,26 @@
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="testcases" href="@Url.Action("Index","Testcase")">
+                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="testcases" href="@Url.Action("RoleIndex","Admin")">
                                     <i class="fa fa-gavel me-2 text-warning"></i>System roles
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="createtestcase" href="@Url.Action("Create","Testcase")">
+                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="createtestcase" href="@Url.Action("","")">
                                     <i class="fa fa-table me-2 text-info"></i>System user roles
                                 </a>
                             </li>
                         </ul>
                     </li>
+                  
                 </ul>
                 <div class="navbar-nav">
+                    <div class="nav-item">
+                        <a class="text-white ms-auto nav-link" data-nav="Track Time" aria-current="page">
+                            <b>Welcome - @HttpContext.Current.User.Identity.Name..!</b>
+                        </a>
+                    </div>
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-user-circle fs-5 me-1"></i>Profile

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 using System.Web.Mvc; 
 using WorkMate.Models;
 
@@ -64,5 +66,66 @@ namespace WorkMate.ViewModels
                 UserList.Add(ExsitingUser);
             }
         }
+    }
+
+    public class AppRoleViewModel
+    {
+        public int Id { get;set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required,MaxLength(150)]
+        public string Description { get; set; }
+
+        public string CreatedBy { get;set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public AppRoleViewModel()
+        {
+
+        }
+
+        public AppRoleViewModel(AppRole appRole)
+        {
+            Id = appRole.Id;
+            Name = appRole.Name;
+            Description = appRole.Description;
+            CreatedBy = appRole.CreatedBy;
+            CreatedDate = appRole.CreatedDate;
+
+        }
+    }
+
+    public  class AppRoleViewModelList
+    {
+        public List<AppRoleViewModel> RolesList = new List<AppRoleViewModel>();
+
+        public AppRoleViewModelList() { }
+
+        public AppRoleViewModelList(List<AppRole> roles)
+        {
+            FillRolesList(roles);
+        }
+
+        private void FillRolesList(List<AppRole> roles)
+        {
+            foreach(var role in roles)
+            {
+                AppRoleViewModel appRoleViewModel = new AppRoleViewModel()
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                    Description = role.Description,
+                    CreatedBy = role.CreatedBy,
+                    CreatedDate = role.CreatedDate
+
+                };
+                RolesList.Add(appRoleViewModel);
+
+            }
+        }
+
     }
 }
