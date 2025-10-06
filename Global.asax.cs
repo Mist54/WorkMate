@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Serilog;
 
 namespace WorkMate
 {
@@ -13,16 +11,21 @@ namespace WorkMate
     {
         protected void Application_Start()
         {
+            // Configure Serilog
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(Server.MapPath("~/App_Data/Logs/log-.txt"), rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             try
             {
                 AreaRegistration.RegisterAllAreas();
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
-                //BundleConfig.RegisterBundles(BundleTable.Bundles);
+                BundleConfig.RegisterBundles(BundleTable.Bundles);
             }
             catch (Exception ex)
             {
-                LogError("Application_Start Error: " + ex.ToString());
+                Log.Error(ex, "Application_Start Error"); // Use Serilog for logging
                 throw ex;
             }
 
@@ -33,7 +36,7 @@ namespace WorkMate
             if (exception != null)
             {
                 // Log the error
-                LogError("Application_Error: " + exception.ToString());
+                Log.Error(exception, "Application_Error"); // Use Serilog for logging
 
                 // Get HTTP status code
                 int httpCode = 500;
@@ -71,7 +74,7 @@ namespace WorkMate
             }
             catch (Exception ex)
             {
-                LogError("Session_Start Error: " + ex.ToString());
+                Log.Error(ex, "Session_Start Error"); // Use Serilog for logging
             }
 
 
@@ -85,55 +88,13 @@ namespace WorkMate
             }
             catch (Exception ex)
             {
-                LogError("Session_End Error: " + ex.ToString());
+                Log.Error(ex, "Session_End Error"); // Use Serilog for logging
             }
         }
 
-        private void LogError(string message)
+        protected void Application_End()
         {
-            try
-            {
-                string logPath = Server.MapPath("~/App_Data/Logs/");
-
-               
-                if (!Directory.Exists(logPath))
-                {
-                    Directory.CreateDirectory(logPath);
-                }
-
-                string fileName = "ErrorLog_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-                string fullPath = Path.Combine(logPath, fileName);
-
-                string logEntry = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " - " + message + Environment.NewLine;
-
-                File.AppendAllText(fullPath, logEntry);
-            }
-            catch
-            {
-                
-                try
-                {
-                    System.Diagnostics.EventLog.WriteEntry("WorkMate Application", message,
-                        System.Diagnostics.EventLogEntryType.Error);
-                }
-                catch(Exception ex)
-                {
-                    throw ex;
-                    
-                }
-            }
-
-
+            Log.CloseAndFlush(); // Close and flush Serilog logger
         }
-
-        ///// <summary>
-        ///// Content secuirty policy CSRF
-        ///// </summary>
-        //protected void Application_BeginRequest()
-        //{
-        //    HttpContext.Current.Response.Headers.Add("Content-Security-Policy",
-        //        "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;");
-        //}
-
     }
 }

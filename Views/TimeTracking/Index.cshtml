@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h4>Welcome, @ViewBag.Username!</h4>
+          
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center bg-dark">
                     <h3 class="my-0 text-white">Time Tracking</h3>
@@ -15,74 +15,74 @@
                 </div>
                 <div class="card shadow-sm p-3">
                     <div class="card-header border-0 pb-0 bg-white">
-                        <div class="row g-3 align-items-center">
-                            <div class="col-lg-6">
-                                <div class="input-group">
-                                    @Html.TextBox("SearchText", null, new { @class = "form-control", placeholder = "Search...", type = "search", aria_label = "Search" })
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fa fa-search me-2"></i>Search
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 d-flex justify-content-lg-end mt-3 mt-lg-0">
-                                <span class="me-3 text-muted fw-bold">Filter:</span>
-                                <div class="form-check form-check-inline">
-                                    @Html.RadioButton("filterOptions", "option1", false, new { @class = "form-check-input", id = "option1" })
-                                    <label class="form-check-label text-nowrap" for="option1">Option 1</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    @Html.RadioButton("filterOptions", "option2", false, new { @class = "form-check-input", id = "option2" })
-                                    <label class="form-check-label text-nowrap" for="option2">Option 2</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    @Html.RadioButton("filterOptions", "option3", false, new { @class = "form-check-input", id = "option3" })
-                                    <label class="form-check-label text-nowrap" for="option3">Option 3</label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
-                    <hr class="my-3" />
-
+                    <!--InProgess Set of timetracks-->
                     <div class="card-body pt-0">
-                        @{
-                            if (Model.TaskTimeEntries != null && Model.TaskTimeEntries.Any())
+                        @if (Model.TaskTimeEntries != null && Model.TaskTimeEntries.Any())
+                        {
+                            foreach (var item in Model.TaskTimeEntries.Where(t => t.Status != WorkMate.Models.TaskStatus.Completed))
                             {
-                                foreach (var item in Model.TaskTimeEntries)
+                                using (Html.BeginForm("UpdateTimeTrack", "TimeTracking", FormMethod.Post, new { @class = "time-track-form row align-items-center mb-2 p-2 border rounded bg-light gx-2" }))
+
                                 {
-                                    <div class="row g-3 align-items-center mb-3">
-                                        <div class="col-lg-4">
-                                            @Html.TextBoxFor(m => item.Description, new { @class = "form-control", placeholder = "What are you working on?" })
-                                        </div>
-                                        <div class="col-lg-3">
-                                            @Html.EnumDropDownListFor(m => item.Status, new { @class = "form-select", id = "ddlStatus_" + item.Id })
-                                        </div>
-                                        <div class="col-lg-3">
-                                            @Html.DropDownListFor(m => item.TaskId, Model.DdlTasks, "Select Task", new { @class = "form-select select2", id = "ddlTask_" + item.Id })
-                                        </div>
-                                        <div class="col-lg-2 d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center me-3">
-                                                <label id="Timer_@item.Id" class="h6 mb-0 fw-bold text-primary">00:00:00</label>
-                                            </div>
-                                            <div class="d-flex gap-2">
-                                                <button class="btn btn-warning btn-sm d-block">Start</button>
-                                                <button class="btn btn-danger btn-sm d-none">Stop</button>
-                                                <button class="btn btn-info btn-sm text-white"><i class="fa fa-edit"></i></button>
-                                                <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </div>
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("Id", item.Id)
+                                    <!-- Description -->
+                                    <div class="col-lg-4 col-12">
+                                        @Html.TextAreaFor(m => item.Description, new { @class = "form-control form-control-sm bg-white text-muted", @readonly = "readonly", rows = 1 })
+                                        @Html.HiddenFor(m => item.Id)
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-lg-2 col-6 mt-1 mt-lg-0">
+                                        @Html.TextBoxFor(m => item.Status, new { @class = "form-control form-control-sm bg-white text-muted", @readonly = "readonly", id = "displayStatus_" + item.Id })
+                                        @Html.HiddenFor(m => item.Status)
+                                    </div>
+
+                                    <!-- Task Name -->
+                                    <div class="col-lg-3 col-6 mt-1 mt-lg-0">
+                                        @Html.TextBoxFor(m => item.TaskName, new { @class = "form-control form-control-sm bg-white text-muted", @readonly = "readonly", id = "displayTask_" + item.Id })
+                                        @Html.HiddenFor(m => item.TaskId)
+                                    </div>
+
+                                    <!-- Timer & Actions -->
+                                    <div class="col-lg-3 col-12 d-flex flex-column flex-sm-row align-items-center justify-content-between mt-1 mt-lg-0">
+                                        <!-- Timer -->
+                                        @{
+                                            TimeSpan duration = TimeSpan.Zero;
+                                            if (item.StartDate != null)
+                                            {
+                                                var endTime = item.EndDate ?? DateTime.Now; // If EndDate is null, use current time
+                                                duration = endTime - item.StartDate;
+                                            }
+                                        }
+                                        <p class="badge bg-light text-primary text-monospace px-2 py-1 mb-1 mb-sm-0"
+                                           id="Timer_@item.Id"
+                                           data-seconds="@((int)duration.TotalSeconds)">
+                                            @duration.ToString(@"hh\:mm\:ss")
+                                        </p>
+                                        <!-- Action Buttons -->
+                                        <div class="d-flex gap-1">
+                                            <button type="submit" name="action" value="Start" class="btn btn-warning btn-sm flex-fill">Start</button>
+                                            <button type="submit" name="action" value="Stop" class="btn btn-danger btn-sm d-none flex-fill">Stop</button>
+                                            <button type="submit" name="action" value="Delete" class="btn btn-outline-danger btn-sm flex-fill"><i class="fa fa-trash"></i></button>
+                                            @if (item.Status.ToString() != "Complete")
+                                            {
+                                                <button type="submit" name="action" value="Complete" class="btn btn-info btn-sm flex-fill">Complete</button>
+                                            }
                                         </div>
                                     </div>
                                 }
                             }
-                            else
-                            {
-                                <h6 class="alert alert-warning">No time records. Create new </h6>
-                            }
-
-
                         }
-
-
+                        else
+                        {
+                            <h6 class="alert alert-warning text-center">No time records. Create new</h6>
+                        }
+                    </div>
+                    <!--Completed Set of timetracks-->
+                    <div id="CompletedTaskContainer">
+                        @Html.Partial("~/Views/Shared/TimeTrack/_TimeTrackCompletedTask.cshtml", Model)
                     </div>
                 </div>
             </div>
@@ -118,7 +118,7 @@
                                 @Html.LabelFor(model => model.NewRecord.TaskId, new { @class = "form-label" })*
                                 @Html.DropDownListFor(model => model.NewRecord.TaskId, Model.DdlTasks, new { @class = " form-select select2" })
                                 @Html.ValidationMessageFor(model => model.NewRecord.TaskId, "", new { @class = "text-danger" })
-                                <small class="form-text text-muted">Use Select2 to search and select your task.</small>
+                                <div id="taskError" class="invalid-feedback" style="display:none;"></div>
                             </div>
                         </div>
                         <div class="col-md-6">

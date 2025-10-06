@@ -5,7 +5,7 @@ namespace WorkMate.Models
 {
     public abstract class AuditableEntityModel
     {
-        //[Required]
+        [Required]
         public string CreatedBy { get; set; }
 
         [Required]

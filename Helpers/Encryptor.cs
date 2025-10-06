@@ -11,11 +11,38 @@ namespace WorkMate.Helpers
 {
     public class Encryptor
     {
-        private static readonly byte[] key =
-        Encoding.UTF8.GetBytes(ConfigurationManager.AppSettings["AesKey"]);
+        private static readonly byte[] key = GetAesKey();
+        private static readonly byte[] iv = GetAesIV();
 
-        private static readonly byte[] iv =
-            Encoding.UTF8.GetBytes(ConfigurationManager.AppSettings["AesIV"]);
+        private static byte[] GetAesKey()
+        {
+            string aesKey = Environment.GetEnvironmentVariable("AES_KEY");
+            if (string.IsNullOrEmpty(aesKey))
+            {
+                aesKey = ConfigurationManager.AppSettings["AesKey"]; // Fallback to Web.config
+            }
+
+            if (string.IsNullOrEmpty(aesKey))
+            {
+                throw new InvalidOperationException("AES_KEY environment variable or Web.config setting is not set. Please set it to a 32-character key.");
+            }
+            return Encoding.UTF8.GetBytes(aesKey);
+        }
+
+        private static byte[] GetAesIV()
+        {
+            string aesIV = Environment.GetEnvironmentVariable("AES_IV");
+            if (string.IsNullOrEmpty(aesIV))
+            {
+                aesIV = ConfigurationManager.AppSettings["AesIV"]; // Fallback to Web.config
+            }
+
+            if (string.IsNullOrEmpty(aesIV))
+            {
+                throw new InvalidOperationException("AES_IV environment variable or Web.config setting is not set. Please set it to a 16-character IV.");
+            }
+            return Encoding.UTF8.GetBytes(aesIV);
+        }
 
         
         public static string EncryptUrlSafe(string plainText)

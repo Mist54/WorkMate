@@ -1,0 +1,52 @@
+﻿@model WorkMate.ViewModels.TimeTrackingListViewModel
+<div class="row">
+    <div class="col-lg-12">
+        <div class="accordion mb-3" id="completedTasksAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingCompleted">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompleted" aria-expanded="false" aria-controls="collapseCompleted">
+                        Completed Tasks (@Model.TaskTimeEntries.Count(t => t.Status == WorkMate.Models.TaskStatus.Completed))
+                    </button>
+                </h2>
+                <div id="collapseCompleted" class="accordion-collapse collapse" aria-labelledby="headingCompleted" data-bs-parent="#completedTasksAccordion">
+                    <div class="accordion-body p-2">
+
+                        @if (Model.TaskTimeEntries != null && Model.TaskTimeEntries.Any())
+                        {
+                            foreach (var item in Model.TaskTimeEntries.Where(t => t.Status == WorkMate.Models.TaskStatus.Completed))
+                            {
+                                <div class="row align-items-center mb-2 p-2 border rounded bg-light gx-2">
+                                    <!-- Description -->
+                                    <div class="col-lg-4 col-12">
+                                        @Html.DisplayFor(m => item.Description, new { @class = "form-control form-control-sm bg-white text-muted" })
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-lg-2 col-6 mt-1 mt-lg-0">
+                                        @Html.DisplayFor(m => item.Status, new { @class = "form-control form-control-sm bg-white text-muted" })
+                                    </div>
+
+                                    <!-- Task Name -->
+                                    <div class="col-lg-3 col-6 mt-1 mt-lg-0">
+                                        @Html.DisplayFor(m => item.TaskName, new { @class = "form-control form-control-sm bg-white text-muted" })
+                                    </div>
+
+                                    <!-- Timer -->
+                                    <div class="col-lg-3 col-12 d-flex align-items-center justify-content-start mt-1 mt-lg-0">
+                                        <p class="badge bg-light text-primary text-monospace px-2 py-1 mb-0">@((item.EndDate - item.StartDate)?.ToString(@"hh\:mm\:ss"))</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <h6 class="alert alert-secondary text-center mb-0">No completed tasks.</h6>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

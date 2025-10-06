@@ -180,7 +180,7 @@ namespace WorkMate.Controllers
                         // If the task name is unique, proceed with creation
                         TaskModel createTask = new TaskModel(model.NewTask.TaskName.Trim(),
                             model.NewTask.TaskDescription.Trim());
-
+                        createTask.CreatedBy = User.Identity.Name;
                         db.Tasks.Add(createTask);
                         int result = db.SaveChanges();
 
@@ -224,6 +224,7 @@ namespace WorkMate.Controllers
                         {
                             ExsistingTask.TaskName = vmChanges.SelectedTask.TaskName;
                             ExsistingTask.TaskDescription = vmChanges.SelectedTask.TaskDescription;
+                            ExsistingTask.ModifiedBy = User.Identity.Name;
                             ExsistingTask.ModifiedDate = DateTime.Now;
                             db.SaveChanges();
 

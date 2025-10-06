@@ -32,53 +32,53 @@ namespace WorkMate.Controllers
         }
 
         /// <summary>
-        /// Used to downlaod testcases
+        /// Used to download testcases
         /// </summary>
-        /// <param name="TaskId"></param>
+        /// <param name="SelectedTaskId"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult DownloadTestcase(int SelectedTaskId)
+        public ActionResult DownloadTestcase(int? SelectedTaskId)
         {
-
-            List<TestCaseModel> testcases = getAllTestcases(SelectedTaskId);
-
-            var excelService = new ExcelExportService();
-            var columnMappings = new Dictionary<string, Func<TestCaseModel, object>>
-            {
-                { "Testcase Name", x => x.TestCaseName },
-                { "Preconditions", x => x.Preconditions },
-                { "Steps", x => x.Steps },
-                { "Expected Result", x => x.ExpectedResult },
-                {"Actual Result",x=>"" },
-                { "Notes", x => x.Notes },
-                { "Status", x => x.TestCaseStatus.ToString() }
-            };
-
             try
             {
+                if (!SelectedTaskId.HasValue || SelectedTaskId.Value <= 0)
+                {
+                    SetErrorToast("Select the task correctly", "Cannot download");
+                    return RedirectToAction("Index"); // or return a View, depending on flow
+                }
+
+                List<TestCaseModel> testcases = getAllTestcases(SelectedTaskId.Value);
+
+                var excelService = new ExcelExportService();
+                var columnMappings = new Dictionary<string, Func<TestCaseModel, object>>
+                {
+                    { "Testcase Name", x => x.TestCaseName },
+                    { "Preconditions", x => x.Preconditions },
+                    { "Steps", x => x.Steps },
+                    { "Expected Result", x => x.ExpectedResult },
+                    { "Actual Result", x => "" },
+                    { "Notes", x => x.Notes },
+                    { "Status", x => x.TestCaseStatus.ToString() }
+                };
+
                 string sheetName = "Testcases";
                 if (testcases.Any() && testcases.First().Task != null)
                 {
                     sheetName = testcases.First().Task.TaskName;
                 }
 
-
                 var fileBytes = excelService.ExportToExcel(testcases, columnMappings, sheetName);
-
-
                 var fileName = $"{sheetName}_{DateTime.Now:yyyyMMdd}.xlsx";
+
                 return File(fileBytes,
                             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                             fileName);
-
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
         }
-
 
         public ActionResult Create(int id = 0, string testcaseName = "")
         {
@@ -357,7 +357,7 @@ namespace WorkMate.Controllers
             List<TestCaseModel> testcases = getAllTestcases(testCaseModel.TaskId);
 
             return new TestCaseViewModel(testCaseModel, testcases);
-            
+
         }
 
 
@@ -477,7 +477,6 @@ namespace WorkMate.Controllers
 
                     AllTasks = db.Tasks.Where(t => !t.IsDeleted).OrderByDescending(t => t.CreatedDate).ToList();
                 }
-
                 return AllTasks;
             }
             catch (Exception ex)

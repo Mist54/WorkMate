@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using WorkMate.Models;
 
@@ -38,14 +39,17 @@ namespace WorkMate.ViewModels
         [Display(Name = "End Time")]
         public DateTime? EndDate { get; set; } = DateTime.Now.AddHours(1);
 
-        [Display(Name = "Duration (hh:mm)")]
-        public string Duration
+        [Display(Name = "Duration")]
+        public DateTime Duration
         {
             get
             {
-                return EndDate.HasValue
-                    ? (EndDate.Value - StartDate).ToString(@"hh\:mm")
-                    : "In Progress";
+                if (!EndDate.HasValue)
+                    return DateTime.MinValue;
+
+                TimeSpan duration = EndDate.Value - StartDate;
+                // Return a DateTime representing just duration (base date + hours/minutes)
+                return new DateTime().Add(duration);
             }
         }
 
@@ -62,11 +66,11 @@ namespace WorkMate.ViewModels
         /// </summary>
         public TimeTrackingViewModel()
         {
-           
+
 
         }
 
-       
+
     }
 
     public class TimeTrackingListViewModel
@@ -81,51 +85,58 @@ namespace WorkMate.ViewModels
 
         public IEnumerable<SelectListItem> DdlTasks { get; set; }
 
-        public TimeTrackingListViewModel(List<TaskModel> tasks,List<TimeTrackModel> timeTracks)
+        public TimeTrackingListViewModel()
         {
-            FillAllTasks(tasks);
+            // Parameterless constructor for model binding
+        }
+
+        public TimeTrackingListViewModel(List<TaskModel> tasks, List<TimeTrackModel> timeTracks, string loggedInUser)
+        {
+            tasks = FilterTaskListByUser(tasks, loggedInUser);
+            var filteredTimeTracks = FilterTimeTracks(timeTracks, loggedInUser);
+            TaskTimeEntries = PopulateTimeTracks(filteredTimeTracks);
+            PopulateTaskList(tasks);
 
         }
 
-        private void FillAllTasks(List<TaskModel> lstTasks)
+        private IEnumerable<TimeTrackingViewModel> PopulateTimeTracks(List<TimeTrackModel> timeTracks)
         {
-            if (lstTasks == null)
+            return timeTracks.Select(t => new TimeTrackingViewModel
             {
-                this.DdlTasks = new List<SelectListItem>();
-            }
-
-            this.DdlTasks = lstTasks.Select(t => new SelectListItem
-            {
-                Value = t.TaskId.ToString(),
-                Text = t.TaskName.Trim()
+                Id = t.Id,
+                TaskId = t.TaskId,
+                TaskName = t.Task?.TaskName,
+                UserId = t.UserId,
+                UserName = t.AppUsers?.UserName,
+                Description = t.Description,
+                StartDate = t.StartDate,
+                EndDate = t.EndDate,
+                Status = t.Status,
+                IsManual = t.IsManual
             }).ToList();
         }
 
-        private void FillAllTimeTracks(List<TimeTrackModel> timeTracks)
+        private List<TaskModel> FilterTaskListByUser(List<TaskModel> tasks, string loggedInUser)
         {
-            foreach(var tracks in timeTracks)
-            {
-                TimeTrackingViewModel timeTrackingViewModel = new TimeTrackingViewModel
-                {
-                    Id = tracks.Id,
-                    TaskId = tracks.TaskId,
-                    TaskName = tracks.Task.TaskName,
-                    UserId = tracks.UserId,
-
-                };
-
-                
-            }
+            return tasks
+                .Where(t => t.CreatedBy.Trim().Equals(loggedInUser.Trim(), StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
 
-        /// <summary>
-        /// Its important to have a default constructor 
-        /// </summary>
-        public TimeTrackingListViewModel()
+        private List<TimeTrackModel> FilterTimeTracks(List<TimeTrackModel> timeTracks, string loggedInUser)
         {
+            return timeTracks
+                .Where(t => t.CreatedBy.Trim().Equals(loggedInUser.Trim(), StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
 
+        private void PopulateTaskList(List<TaskModel> lstTasks)
+        {
+            DdlTasks = lstTasks?.Select(t => new SelectListItem
+            {
+                Value = t.TaskId.ToString(),
+                Text = t.TaskName.Trim()
+            }).ToList() ?? new List<SelectListItem>();
         }
     }
-
-
 }

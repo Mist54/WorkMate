@@ -81,14 +81,14 @@
                         </a>
                         <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarDropdown">
                             <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="tasks" href="@Url.Action("Index","Task")">
-                                    <i class="fa fa-tasks me-2 text-primary"></i>Tasks list
+                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="testcases" href="@Url.Action("Index","Testcase")">
+                                    <i class="fa fa-dashboard me-2 text-primary"></i>Testcases dashboard
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="testcases" href="@Url.Action("Index","Testcase")">
-                                    <i class="fa fa-sticky-note me-2 text-primary"></i>Testcases
+                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="tasks" href="@Url.Action("Index","Task")">
+                                    <i class="fa fa-tasks me-2 text-primary"></i>Tasks list
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
@@ -120,15 +120,9 @@
                                     <i class="fa fa-gavel me-2 text-warning"></i>System roles
                                 </a>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="createtestcase" href="@Url.Action("","")">
-                                    <i class="fa fa-table me-2 text-info"></i>System user roles
-                                </a>
-                            </li>
                         </ul>
                     </li>
-                  
+
                 </ul>
                 <div class="navbar-nav">
                     <div class="nav-item">
@@ -210,10 +204,9 @@
                 placeholder: 'Select an option',
                 allowClear: false
             });
-
             // Reinitialize Select2 when theme changes to apply dark mode styles
             $(document).on('themeChanged', function () {
-                $('.select2').each(function() {
+                $('.select2').each(function () {
                     if ($(this).hasClass('select2-hidden-accessible')) {
                         $(this).select2('destroy');
                     }
@@ -224,12 +217,44 @@
                 });
             });
             document.getElementById('currentYear').textContent = new Date().getFullYear();
-
             // Initialize theme on page load
             initializeTheme();
-
             // Initialize active navigation state
             initializeActiveNav();
+
+            // Theme toggle functionality
+            $('#themeToggle').click(function () {
+                toggleTheme();
+            });
+
+            // Navigation active state functionality
+            $('.nav-menu-item, .nav-submenu-item').click(function (e) {
+                var clickedItem = $(this);
+                var navType = clickedItem.data('nav');
+
+                // Store the active nav state
+                localStorage.setItem('activeNav', navType);
+
+                // Update active states
+                setActiveNavState(navType);
+            });
+
+            // Dropdown show/hide events for subtle active states
+            $('.dropdown').on('show.bs.dropdown', function () {
+                var dropdownToggle = $(this).find('.nav-menu-item');
+                dropdownToggle.addClass('dropdown-active');
+            });
+
+            $('.dropdown').on('hide.bs.dropdown', function () {
+                var dropdownToggle = $(this).find('.nav-menu-item');
+                var activeNav = localStorage.getItem('activeNav');
+
+                // Only remove dropdown-active if this dropdown doesn't contain the active item
+                if (activeNav !== 'tasks' && activeNav !== 'testcases' && activeNav !== 'createtestcase') {
+                    dropdownToggle.removeClass('dropdown-active');
+                }
+            });
+
 
             //Universal declaration of the function  window.toggleBootstrapModal = function(modalId, action) { ...}
             //here if we write it as window.functionname it will be explicitly set as global
@@ -261,48 +286,6 @@
 
             }
 
-            // Theme toggle functionality
-            $('#themeToggle').click(function() {
-                toggleTheme();
-            });
-
-            // Navigation active state functionality
-            $('.nav-menu-item, .nav-submenu-item').click(function(e) {
-                // Remove active class from all nav items
-                $('.nav-menu-item').removeClass('active');
-                $('.nav-submenu-item').removeClass('active');
-
-                var clickedItem = $(this);
-                var navType = clickedItem.data('nav');
-
-                // Add active class to clicked item
-                clickedItem.addClass('active');
-
-                // If it's a submenu item, also activate the parent dropdown with subtle styling
-                if (clickedItem.hasClass('nav-submenu-item')) {
-                    $('.nav-menu-item[data-nav="testerdev"]').addClass('active');
-                }
-
-                // Store the active nav state
-                localStorage.setItem('activeNav', navType);
-            });
-
-            // Dropdown show/hide events for subtle active states
-            $('.dropdown').on('show.bs.dropdown', function() {
-                var dropdownToggle = $(this).find('.nav-menu-item');
-                dropdownToggle.addClass('dropdown-active');
-            });
-
-            $('.dropdown').on('hide.bs.dropdown', function() {
-                var dropdownToggle = $(this).find('.nav-menu-item');
-                var navType = dropdownToggle.data('nav');
-                var activeNav = localStorage.getItem('activeNav');
-
-                // Only remove dropdown-active if this dropdown doesn't contain the active item
-                if (activeNav !== 'tasks' && activeNav !== 'testcases' && activeNav !== 'createtestcase') {
-                    dropdownToggle.removeClass('dropdown-active');
-                }
-            });
         });
 
         // Function to initialize theme based on stored preference
@@ -310,14 +293,12 @@
             var savedTheme = localStorage.getItem('theme') || 'light';
             setTheme(savedTheme);
         }
-
         // Function to toggle between light and dark themes
         function toggleTheme() {
             var currentTheme = document.documentElement.getAttribute('data-bs-theme');
             var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             setTheme(newTheme);
         }
-
         // Function to set theme
         function setTheme(theme) {
             document.documentElement.setAttribute('data-bs-theme', theme);
@@ -335,23 +316,58 @@
             $(document).trigger('themeChanged');
         }
 
-        // Function to initialize active navigation state
-        function initializeActiveNav() {
-            var activeNav = localStorage.getItem('activeNav') || 'home';
-
+        // Function to set active navigation state
+        function setActiveNavState(navType) {
             // Remove active and dropdown-active class from all items
             $('.nav-menu-item').removeClass('active dropdown-active');
             $('.nav-submenu-item').removeClass('active');
 
-            // Set active based on stored state
-            if (activeNav === 'tasks' || activeNav === 'testcases' || activeNav === 'createtestcase') {
+            // Set active based on navType
+            if (navType === 'tasks' || navType === 'testcases' || navType === 'createtestcase') {
+                // Activate parent dropdown
                 $('.nav-menu-item[data-nav="testerdev"]').addClass('active dropdown-active');
-                $('.nav-submenu-item[data-nav="' + activeNav + '"]').addClass('active');
+                // Activate specific submenu item
+                $('.nav-submenu-item[data-nav="' + navType + '"]').addClass('active');
             } else {
-                $('.nav-menu-item[data-nav="' + activeNav + '"]').addClass('active');
+                // Activate regular menu item
+                $('.nav-menu-item[data-nav="' + navType + '"]').addClass('active');
             }
         }
 
+        // Function to initialize active navigation state
+        function initializeActiveNav() {
+            // Get current page URL
+            var currentUrl = window.location.pathname.toLowerCase();
+            var detectedNav = null;
+
+            // Detect nav based on current URL
+            if (currentUrl.includes('/testcase/index')) {
+                detectedNav = 'testcases';
+            } else if (currentUrl.includes('/task/index')) {
+                detectedNav = 'tasks';
+            } else if (currentUrl.includes('/testcase/create')) {
+                detectedNav = 'createtestcase';
+            } else if (currentUrl.includes('/timetracking/index')) {
+                detectedNav = 'Track Time';
+            } else if (currentUrl.includes('/admin/userindex')) {
+                detectedNav = 'tasks'; // Admin users submenu
+            } else if (currentUrl.includes('/admin/roleindex')) {
+                detectedNav = 'testcases'; // Admin roles submenu
+            } else if (currentUrl.includes('/home/index') || currentUrl === '/' || currentUrl === '') {
+                detectedNav = 'home';
+            }
+
+            // If we detected a nav from URL, use it; otherwise fall back to localStorage or default to 'home'
+            var activeNav = detectedNav || localStorage.getItem('activeNav') || 'home';
+
+            // Update localStorage with detected nav
+            if (detectedNav) {
+                localStorage.setItem('activeNav', activeNav);
+            }
+
+            // Set the active state
+            setActiveNavState(activeNav);
+        }
         // Function to display iziToast notifications
         function showToast(type, message, title = '') {
             iziToast[type]({
@@ -365,10 +381,17 @@
             });
         }
 
-        // Check for TempData messages on page load and display them as toasts
+        //Function to show the loader
+        function showLoader() {
+            $('#fullPageLoader').removeClass('d-none');
+        }
+
+        // Function to hide the loader
+        function hideLoader() {
+            $('#fullPageLoader').addClass('d-none');
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
-            // The Razor syntax @TempData["Key"] will be replaced by the server with the actual value,
-            // or an empty string if TempData key doesn't exist.
             var toastMessage = '@TempData["ToastMessage"]';
             var toastType = '@TempData["ToastType"]';
             var toastTitle = '@TempData["ToastTitle"]';
@@ -377,24 +400,8 @@
             if (toastMessage && toastType) {
                 showToast(toastType.toLowerCase(), toastMessage, toastTitle);
             }
+
         });
-
-        //Function to show the loader
-        function showLoader() {
-            // Remove the 'd-none' class to make the loader visible
-            $('#fullPageLoader').removeClass('d-none');
-        }
-
-        // Function to hide the loader
-        function hideLoader() {
-            // Add the 'd-none' class to hide the loader
-            $('#fullPageLoader').addClass('d-none');
-        }
-
-
-
-
-
     </script>
 </body>
 </html>

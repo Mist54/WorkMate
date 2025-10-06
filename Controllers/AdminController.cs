@@ -216,7 +216,7 @@ namespace WorkMate.Controllers
             }
             catch (Exception ex)
             {
-                throw; // keep stack trace
+                throw ex ; // keep stack trace
             }
         }
 
