@@ -253,6 +253,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HttpContextCurrentUserService.cs" />
+    <Compile Include="Helpers\TimeTrackReportHelper.cs" />
     <Compile Include="Helpers\TrieSearch.cs" />
     <Compile Include="Helpers\Encryptor.cs" />
     <Compile Include="Interface\IExcelExportService.cs" />

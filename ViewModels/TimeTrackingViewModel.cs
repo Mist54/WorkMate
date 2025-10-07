@@ -69,8 +69,6 @@ namespace WorkMate.ViewModels
 
 
         }
-
-
     }
 
     public class TimeTrackingListViewModel
@@ -84,6 +82,8 @@ namespace WorkMate.ViewModels
 
 
         public IEnumerable<SelectListItem> DdlTasks { get; set; }
+
+        public IEnumerable<SelectListItem> StatusList { get; set; }
 
         public TimeTrackingListViewModel()
         {

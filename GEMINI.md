@@ -34,3 +34,5 @@ To build and run this project, you will need Visual Studio with the .NET Framewo
     *   jQuery
     *   FontAwesome
     *   ClosedXML
+    *   Newtonsoft.Json
+    *   Serilog

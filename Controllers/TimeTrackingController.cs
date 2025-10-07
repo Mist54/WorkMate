@@ -218,5 +218,39 @@ namespace WorkMate.Controllers
         }
 
         #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DownloadReport(DateTime StartDate, DateTime EndDate)
+        {
+            try
+            {
+                EndDate = EndDate.AddDays(1);
+                using (var db = new AppDbContext())
+                {
+                    var timeTracks = db.TimeTracks
+                        .Where(t =>
+                            !t.IsDeleted &&
+                            t.StartDate >= StartDate &&
+                            t.EndDate < EndDate
+                        )
+                        .Include(t => t.Task)
+                        .Include(t => t.AppUsers)
+                        .OrderByDescending(t => t.CreatedDate)
+                        .ToList();
+
+
+                    var reportHelper = new Helpers.TimeTrackReportHelper();
+                    var excelBytes = reportHelper.GenerateExcelReport(timeTracks);
+
+                    return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"TimeTrackReport_{DateTime.Now:yyyyMMdd}.xlsx");
+                }
+            }
+            catch (Exception ex)
+            {
+                SetErrorToast($"An error occurred while generating the report: {ex.Message}", "Report Error");
+                return RedirectToAction("Index");
+            }
+        }
     }
 }

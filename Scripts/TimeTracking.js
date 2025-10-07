@@ -22,6 +22,26 @@
         });
     });
 
+    //For download modal 
+    $('#downloadModal').on('shown.bs.modal', function () {
+        const now = new Date();
+        const prevMonthFirstDay = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+
+        flatpickr("#downloadStartDate", {
+            enableTime: true,
+            dateFormat: "d-m-Y",
+            time_24hr: true,
+            defaultDate: prevMonthFirstDay
+        });
+
+        flatpickr("#downloadEndDate", {
+            enableTime: true,
+            dateFormat: "d-m-Y",
+            time_24hr: true,
+            defaultDate: now
+        });
+    });
+
     //Validation
     $("#btnCreateNewTrack").on("click", function (e) {
         e.preventDefault();
