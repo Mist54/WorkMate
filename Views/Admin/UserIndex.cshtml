@@ -21,6 +21,7 @@
                                        <th>Username</th>
                                        <th class="col-md-3">Email</th>
                                        <th class="col-md-3">Designation</th>
+                                       <th class="col-md-3">Active</th>
                                        <th class="col-md-3 text-end">Actions</th>
                                    </tr>
                                </thead>
@@ -34,14 +35,27 @@
                                            <td>
                                                @(!string.IsNullOrWhiteSpace(user.Designation) ? user.Designation : "Not assigned")
                                            </td>
+                                           <td>
+                                               @Html.Raw(
+                                                   user.IsActive
+                                                       ? "<i class='fa fa-check text-success'></i>"
+                                                       : "<i class='fa fa-lock text-secondary'></i>"
+                                               )
+                                           </td>
+
                                            <td class="text-end">
                                                <a href="@Url.Action("UserEdit", "Admin", new { id = user.Id })" class="btn btn-sm btn-primary">
                                                    <i class="fa fa-edit"></i> Edit
                                                </a>
-                                              
-                                               <a href="@Url.Action("UserDelete", "Admin", new { id = user.Id })" class="btn btn-sm btn-danger">
-                                                   <i class="fa fa-trash"></i> Delete
-                                               </a>
+
+                                               @if ((User.IsInRole("Admin") || User.IsInRole("Manager")) && !(User.IsInRole("Admin") && User.Identity.Name.Equals(user.UserName, StringComparison.InvariantCultureIgnoreCase)))
+                                               {
+                                                   <a href="@Url.Action("UserDelete", "Admin", new { id = user.Id })" class="btn btn-sm btn-danger">
+                                                       <i class="fa fa-trash"></i> Delete
+                                                   </a>
+                                               }
+
+
                                            </td>
                                        </tr>
                                    }

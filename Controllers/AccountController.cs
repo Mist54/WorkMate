@@ -71,10 +71,27 @@ namespace WorkMate.Controllers
         {
             if (!ModelState.IsValid)
                 return View(model);
-            //the SignInManager will look after all validations and setups 
-            //Checks and finds users reffering to perticular username or email.
+
+            // Find user by username or email
+            var user = await UserManager.FindByNameAsync(model.UsernameOrEmail)
+                       ?? await UserManager.FindByEmailAsync(model.UsernameOrEmail);
+
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid username or email.");
+                return View(model);
+            }
+
+            // Check if account is active
+            if (!user.IsActive) // Assuming you have IsActive in ApplicationUser
+            {
+                ModelState.AddModelError("", "Your account is inactive or locked.");
+                return View(model);
+            }
+
+            // Attempt sign-in
             var result = await SignInManager.PasswordSignInAsync(
-                model.UsernameOrEmail,
+                user.UserName,
                 model.Password,
                 model.RememberMe,
                 shouldLockout: false);
@@ -83,17 +100,21 @@ namespace WorkMate.Controllers
             {
                 case SignInStatus.Success:
                     return RedirectToAction("Index", "Home");
+
                 case SignInStatus.LockedOut:
-                    //return View("Lockout");
                     ModelState.AddModelError("", "User account is locked.");
                     return View(model);
-                //case SignInStatus.RequiresVerification:
-                //    return RedirectToAction("SendCode", new { ReturnUrl = "/", RememberMe = false });
+
+                // Uncomment if using two-factor auth
+                // case SignInStatus.RequiresVerification:
+                //     return RedirectToAction("SendCode", new { ReturnUrl = "/", RememberMe = false });
+
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
             }
         }
+
 
 
         public ActionResult Register()

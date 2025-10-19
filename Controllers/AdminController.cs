@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ using WorkMate.ViewModels;
 
 namespace WorkMate.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager")]
     public class AdminController : Controller
     {
         #region Usersection
@@ -45,71 +46,143 @@ namespace WorkMate.Controllers
                 return View(newUser);
             }
 
+            if (string.IsNullOrWhiteSpace(newUser.UserName) || string.IsNullOrWhiteSpace(newUser.Email))
+            {
+                ModelState.AddModelError("", "Username and Email are required.");
+                newUser.Designations = PopulateDesignations();
+                return View(newUser);
+            }
+
             try
             {
                 using (var db = new AppDbContext())
                 {
                     var userStore = new UserStore<AppUsers, AppRole, int, UserLogin, UserRole, UserClaim>(db);
                     var userManager = new UserManager<AppUsers, int>(userStore);
+                    var roleManager = new RoleManager<AppRole, int>(new RoleStore<AppRole, int, UserRole>(db));
 
-                    AppUsers createNewUser = new AppUsers()
+                    var now = DateTime.UtcNow;
+                    var actor = User?.Identity?.Name ?? "System";
+
+                    // Create new user entity (audit / required fields set BEFORE saving)
+                    var createNewUser = new AppUsers()
                     {
                         UserName = newUser.UserName,
                         Email = newUser.Email,
                         Designation = newUser.Designation,
-                        CreatedBy = User.Identity.Name,
-                        CreatedDate = DateTime.UtcNow,
-                        ModifiedBy = User.Identity.Name,
-                        ModifiedDate = DateTime.UtcNow,
+                        CreatedBy = actor,
+                        CreatedDate = now,
+                        ModifiedBy = actor,
+                        ModifiedDate = now,
                         IsActive = false,
-                        IsDeleted = false,
+                        IsDeleted = false
                     };
+
+                    // Create user
                     var result = await userManager.CreateAsync(createNewUser, newUser.Password);
 
-                    // You should also check the result to handle success or failure
-                    if (result.Succeeded)
-                    {
-                        try
-                        {
-                            var roleStore = new RoleStore<AppRole, int, UserRole>(db);
-                            var roleManager = new RoleManager<AppRole, int>(roleStore);
-
-                            // Assign role to user
-                            await userManager.AddToRoleAsync(createNewUser.Id, newUser.Designation);
-
-                            TempData["ToastMessage"] = "User created successfully!";
-                            TempData["ToastType"] = "success";
-                            TempData["ToastTitle"] = "Success!";
-                            return RedirectToAction("UserIndex");
-
-                        }
-                        catch (Exception ex)
-                        {
-                            throw ex;
-                        }
-
-
-                    }
-                    else
+                    if (!result.Succeeded)
                     {
                         foreach (var error in result.Errors)
-                        {
                             ModelState.AddModelError("", error);
-                        }
+
                         newUser.Designations = PopulateDesignations();
                         return View(newUser);
                     }
+
+                    // Ensure role exists; when creating a role, fill required fields (audit fields)
+                    if (!await roleManager.RoleExistsAsync(newUser.Designation))
+                    {
+                        var newRole = new AppRole
+                        {
+                            Name = newUser.Designation,
+                            CreatedBy = actor,
+                            CreatedDate = now,
+                            UpdatedBy = actor,  
+                            UpdatedDate = now,
+                            IsDeleted = false
+                        };
+
+                        var createRoleResult = await roleManager.CreateAsync(newRole);
+                        if (!createRoleResult.Succeeded)
+                        {
+                            foreach (var err in createRoleResult.Errors)
+                                ModelState.AddModelError("", "Role creation: " + err);
+
+                            newUser.Designations = PopulateDesignations();
+                            return View(newUser);
+                        }
+                    }
+
+                    // Get the role entity (ensure it exists and we have its Id)
+                    var roleEntity = await db.Set<AppRole>().FirstOrDefaultAsync(r => r.Name == newUser.Designation);
+                    if (roleEntity == null)
+                    {
+                        ModelState.AddModelError("", "Role not found after creation.");
+                        newUser.Designations = PopulateDesignations();
+                        return View(newUser);
+                    }
+
+                    // Check if mapping already exists
+                    bool mappingExists = await db.Set<UserRole>()
+                                                 .AnyAsync(ur => ur.UserId == createNewUser.Id && ur.RoleId == roleEntity.Id);
+
+                    if (!mappingExists)
+                    {
+                        // Create the UserRole manually and set required audit fields
+                        var userRole = new UserRole
+                        {
+                            UserId = createNewUser.Id,
+                            RoleId = roleEntity.Id,
+                            CreatedBy = actor,    
+                            CreatedDate = now,
+                            UpdatedBy = actor,
+                            UpdatedDate = now,
+                            IsDeleted = false
+                        };
+
+                        db.Set<UserRole>().Add(userRole);
+                        await db.SaveChangesAsync();
+                    }
+
+                    // success
+                    TempData["ToastMessage"] = "User created successfully!";
+                    TempData["ToastType"] = "success";
+                    TempData["ToastTitle"] = "Success!";
+                    return RedirectToAction("UserIndex");
+                }
+            }
+            catch (DbEntityValidationException ex)
+            {
+                // Put EF validation messages into ModelState so they show in UI
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    var entityName = validationErrors.Entry.Entity.GetType().Name;
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        var message = $"{entityName}.{validationError.PropertyName}: {validationError.ErrorMessage}";
+                        System.Diagnostics.Debug.WriteLine(message);
+                        ModelState.AddModelError("", message);
+                    }
                 }
 
-
+                newUser.Designations = PopulateDesignations();
+                return View(newUser);
             }
             catch (Exception ex)
             {
-                throw ex;
+                System.Diagnostics.Debug.WriteLine($"Unexpected error: {ex}");
+                ModelState.AddModelError("", "Unexpected error: " + ex.Message);
+                newUser.Designations = PopulateDesignations();
+                return View(newUser);
             }
-            
         }
 
+        /// <summary>
+        /// User Edit page section 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult UserEdit(int id)
         {
             AppUsers appUser = getUserById(id);
@@ -119,6 +192,7 @@ namespace WorkMate.Controllers
                 UserName = appUser.UserName,
                 Email = appUser.Email,
                 Designation = appUser.Designation,
+                IsActive = appUser.IsActive,
                 Designations = PopulateDesignations(appUser.Designation),
 
             };
@@ -143,6 +217,7 @@ namespace WorkMate.Controllers
                         existingUser.UserName = appUserViewModel.UserName;
                         existingUser.Email = appUserViewModel.Email;
                         existingUser.Designation = appUserViewModel.Designation;
+                        existingUser.IsActive = appUserViewModel.IsActive;
 
                         // Created fields: preserve if already set
                         existingUser.CreatedBy = string.IsNullOrWhiteSpace(existingUser.CreatedBy)
@@ -336,6 +411,7 @@ namespace WorkMate.Controllers
         #endregion Usersection
 
         #region RoleSection
+        [Authorize(Roles = "Admin")]
         public ActionResult RoleIndex()
         {
             List<AppRole> roles = GetUserRoles();
@@ -343,7 +419,7 @@ namespace WorkMate.Controllers
 
             return View(appRoleViewModelList);
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult RoleCreate()
         {
             AppRoleViewModel appRoleViewModel = new AppRoleViewModel();
@@ -409,7 +485,7 @@ namespace WorkMate.Controllers
                 
             }
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult RoleEdit(int id)
         {
             var Role = getRoleById(id);
@@ -465,7 +541,7 @@ namespace WorkMate.Controllers
                 }
             }
         }
-
+        [Authorize(Roles = "Admin")]
         public ActionResult RoleDelete(int id)
         {
             var Role = getRoleById(id);

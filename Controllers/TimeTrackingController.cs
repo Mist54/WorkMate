@@ -111,7 +111,7 @@ namespace WorkMate.Controllers
                 }
                 catch (Exception ex)
                 {
-                    SetErrorToast("Cannot proceed, server error occured." + ex.Message, "Exception Error");
+                    SetErrorToast("Cannot proceed, server error occurred." + ex.Message, "Exception Error");
                 }
 
             }

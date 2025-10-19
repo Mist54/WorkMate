@@ -5,8 +5,6 @@ using WorkMate.ViewModels;
 
 namespace WorkMate.Models
 {
-    public enum TaskStatus {InProgress, Completed }
-
     public class TimeTrackModel: AuditableEntityModel
     {
         [Key]

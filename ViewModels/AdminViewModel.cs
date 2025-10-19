@@ -32,6 +32,9 @@ namespace WorkMate.ViewModels
         [Display(Name = "Designation")]
         public string Designation { get; set; }
 
+        [Display(Name = "Is Active?")]
+        public bool IsActive { get; set; }
+
         // This property is used to populate the dropdown list for designations.
         public IEnumerable<SelectListItem> Designations { get; set; }
 
@@ -62,6 +65,7 @@ namespace WorkMate.ViewModels
                     Password = user.PasswordHash,
                     Email = user.Email,
                     Designation = user.Designation,
+                    IsActive = user.IsActive
                 };
                 UserList.Add(ExsitingUser);
             }

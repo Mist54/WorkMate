@@ -17,7 +17,7 @@
                     <h3 class="text-primary">Selected Task Details</h3>
                     @if (Model.SelectedTask != null)
                     {
-                        using (Html.BeginForm("SaveChanges", "Task", FormMethod.Post, new { @class = "" }))
+                        using (Html.BeginForm("SaveChanges", "Task", FormMethod.Post, new { @class = "", id = "saveChangesForm" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.HiddenFor(m => m.SelectedTask.TaskId)
@@ -29,6 +29,7 @@
                                     @Html.ValidationMessageFor(m => m.SelectedTask.TaskName, "", new { @class = "text-danger small mt-1" })
                                 </div>
                             </div>
+
                             <div class="mb-3">
                                 <div class="form-floating">
                                     @Html.TextAreaFor(m => m.SelectedTask.TaskDescription, new { @class = "form-control", placeholder = "Task Description" })
@@ -36,6 +37,71 @@
                                     @Html.ValidationMessageFor(m => m.SelectedTask.TaskDescription, "", new { @class = "text-danger small mt-1" })
                                 </div>
                             </div>
+
+                            <!-- Assignment / Priority / Status / Dates -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(m => m.SelectedTask.AssignedToUserId, "Assigned To", new { @class = "form-label" })
+                                        @Html.DropDownListFor(m => m.SelectedTask.AssignedToUserId, Model.SelectedTask.AssignedToList ?? new List<SelectListItem>(), "-- Select user --", new { @class = "form-control select2", id = "SelectedTask_AssignedToUserId", @data_placeholder = "Select user" })
+                                        @Html.ValidationMessageFor(m => m.SelectedTask.AssignedToUserId, "", new { @class = "text-danger small mt-1" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(m => m.SelectedTask.AssignedByUserId, "Assigned By", new { @class = "form-label" })
+                                        @Html.DropDownListFor(m => m.SelectedTask.AssignedByUserId, Model.SelectedTask.AssignedByList ?? new List<SelectListItem>(), "-- Select user --", new { @class = "form-control select2", id = "SelectedTask_AssignedByUserId", @data_placeholder = "Select user" })
+                                        @Html.ValidationMessageFor(m => m.SelectedTask.AssignedByUserId, "", new { @class = "text-danger small mt-1" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(m => m.SelectedTask.Priority, "Priority", new { @class = "form-label" })
+                                        <select name="SelectedTask.Priority" class="form-control" id="SelectedTask_Priority">
+                                            @foreach (var p in Enum.GetValues(typeof(WorkMate.Models.TaskPriority)).Cast<WorkMate.Models.TaskPriority>())
+                                            {
+                                                <option value="@p" @(p == Model.SelectedTask.Priority ? "selected" : "")>@p</option>
+                                            }
+                                        </select>
+                                        @Html.ValidationMessageFor(m => m.SelectedTask.Priority, "", new { @class = "text-danger small mt-1" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(m => m.SelectedTask.Status, "Status", new { @class = "form-label" })
+                                        @Html.DropDownListFor(m => m.SelectedTask.Status, Enum.GetValues(typeof(WorkMate.Models.TaskStatus))
+                                                 .Cast<WorkMate.Models.TaskStatus>()
+                                                 .Select(s => new SelectListItem { Value = s.ToString(), Text = s.ToString(), Selected = (s == Model.SelectedTask.Status) })
+                                                 , "-- Select status --", new { @class = "form-control select2", id = "SelectedTask_Status", @data_placeholder = "Select status" })
+                                        @Html.ValidationMessageFor(m => m.SelectedTask.Status, "", new { @class = "text-danger small mt-1" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(m => m.SelectedTask.StartDate, "Start Date", new { @class = "form-label" })
+                                        @Html.TextBoxFor(m => m.SelectedTask.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control flatpickr", autocomplete = "off", placeholder = "Start Date", id = "SelectedTask_StartDate" })
+                                        @Html.ValidationMessageFor(m => m.SelectedTask.StartDate, "", new { @class = "text-danger small mt-1" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        @Html.LabelFor(m => m.SelectedTask.EndDate, "End Date", new { @class = "form-label" })
+                                        @Html.TextBoxFor(m => m.SelectedTask.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control flatpickr", autocomplete = "off", placeholder = "End Date", id = "SelectedTask_EndDate" })
+                                        @Html.ValidationMessageFor(m => m.SelectedTask.EndDate, "", new { @class = "text-danger small mt-1" })
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end assignment/priority/status/dates -->
+
                             <div class="row mt-4 mb-1">
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -49,8 +115,6 @@
 
                                     </div>
                                 </div>
-
-
                             </div>
                         }
                     }
@@ -97,17 +161,19 @@
                                     </div>
                                 </div>
                             </div>
-
                         }
-
 
                         <div class="table-responsive  slim-scrollbar">
                             <table class="table table-hover table-striped overflow-hidden">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th scope="col">ID</th>
+                                        <th scope="col" class="d-none">ID</th>
                                         <th scope="col">Task Name</th>
-                                        <th scope="col">Task Description</th>
+                                        <th scope="col">Assigned To</th>
+                                        <th scope="col">Priority</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col" class="d-none">Start</th>
+                                        <th scope="col">Deadline</th>
                                         <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
@@ -117,15 +183,13 @@
                                         foreach (var task in Model.AllTaskList)
                                         {
                                             <tr class="@(Model.SelectedTask != null && Model.SelectedTask.TaskId == task.TaskId ? "table-primary" : "")">
-                                                <td>
-                                                    <p>@task.TaskId</p>
-                                                </td>
-                                                <td>
-                                                    <p>@task.TaskName</p>
-                                                </td>
-                                                <td>
-                                                    <p>@task.TaskDescription</p>
-                                                </td>
+                                                <td class="d-none"><p>@task.TaskId</p></td>
+                                                <td><p>@task.TaskName</p></td>
+                                                <td><p>@(string.IsNullOrEmpty(task.AssignedToUserName) ? "-" : task.AssignedToUserName)</p></td>
+                                                <td><p>@task.Priority</p></td>
+                                                <td><p>@(task.GetType().GetProperty("Status") != null ? task.GetType().GetProperty("Status").GetValue(task)?.ToString() : "-")</p></td>
+                                                <td class="d-none"><p>@(task.StartDate.HasValue ? task.StartDate.Value.ToString("yyyy-MM-dd") : "-")</p></td>
+                                                <td><p>@(task.EndDate.HasValue ? task.EndDate.Value.ToString("yyyy-MM-dd") : "-")</p></td>
                                                 <td>
                                                     <a href="@Url.Action("Index", "Task", new { selectedId = task.TaskId })" class="btn btn-sm btn-outline-primary">
                                                         <i class="fa fa-eye"></i>
@@ -137,10 +201,9 @@
                                     else
                                     {
                                         <tr class="text-warning text-center">
-                                            <td colspan="4"><i class="fa fa-warning mx-2"></i>No data found.</td>
+                                            <td colspan="8"><i class="fa fa-warning mx-2"></i>No data found.</td>
                                         </tr>
                                     }
-
                                 </tbody>
                             </table>
                         </div>
@@ -151,6 +214,7 @@
         </div>
     </div>
 </div>
+
 <!-- Create Task Modal -->
 <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
@@ -164,29 +228,93 @@
                 </div>
                 <div class="modal-body p-4">
 
-
                     <div class="row">
                         <div class="col-12">
                             <div class="form-floating">
                                 @Html.EditorFor(m => m.NewTask.TaskName, new { htmlAttributes = new { @class = "form-control", placeholder = "Task Name" } })
                                 @Html.LabelFor(m => m.NewTask.TaskName)
                                 <p class="text-danger d-none" id="errmsgMdlTaskName"><b>Please provide correct taskname, taskname should atleast contains 3 letters.</b></p>
+                                @Html.ValidationMessageFor(m => m.NewTask.TaskName, "", new { @class = "text-danger small mt-1" })
                             </div>
                         </div>
                     </div>
-                    <div class="row"><div class="col-12">&nbsp;</div></div>
-                    <div class="row">
 
+                    <div class="row"><div class="col-12">&nbsp;</div></div>
+
+                    <div class="row">
                         <div class="col-12">
                             <div class="form-floating">
                                 @Html.TextAreaFor(m => m.NewTask.TaskDescription, new { @class = "form-control", placeholder = "Task Description" })
                                 @Html.LabelFor(m => m.NewTask.TaskDescription, "Task Description")
                                 <p class="text-danger d-none" id="errmsgMdlTaskDescription"><b>Please provide correct task description, task description should atleast contains 3 letters.</b></p>
+                                @Html.ValidationMessageFor(m => m.NewTask.TaskDescription, "", new { @class = "text-danger small mt-1" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assignment / Priority / Status / Dates -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.NewTask.AssignedToUserId, "Assigned To", new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.NewTask.AssignedToUserId, Model.NewTask.AssignedToList ?? new List<SelectListItem>(), "-- Select user --", new { @class = "form-control select2", id = "NewTask_AssignedToUserId", @data_placeholder = "Select user" })
+                                @Html.ValidationMessageFor(m => m.NewTask.AssignedToUserId, "", new { @class = "text-danger small mt-1" })
                             </div>
                         </div>
 
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.NewTask.AssignedByUserId, "Assigned By", new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.NewTask.AssignedByUserId, Model.NewTask.AssignedByList ?? new List<SelectListItem>(), "-- Select user --", new { @class = "form-control select2", id = "NewTask_AssignedByUserId", @data_placeholder = "Select user" })
+                                @Html.ValidationMessageFor(m => m.NewTask.AssignedByUserId, "", new { @class = "text-danger small mt-1" })
+                            </div>
+                        </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.NewTask.StartDate, "Start Date", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.NewTask.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control flatpickr", id = "NewStartDate", autocomplete = "off", placeholder = "Start Date" })
+                                @Html.ValidationMessageFor(m => m.NewTask.StartDate, "", new { @class = "text-danger small mt-1" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.NewTask.EndDate, "End Date", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.NewTask.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control flatpickr", id = "NewEndDate", autocomplete = "off", placeholder = "End Date" })
+                                @Html.ValidationMessageFor(m => m.NewTask.EndDate, "", new { @class = "text-danger small mt-1" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.NewTask.Priority, "Priority", new { @class = "form-label" })
+                                <select name="NewTask.Priority" id="NewPriority" class="form-control">
+                                    @foreach (var p in Enum.GetValues(typeof(WorkMate.Models.TaskPriority)).Cast<WorkMate.Models.TaskPriority>())
+                                    {
+                                        <option value="@p" @(p == Model.NewTask.Priority ? "selected" : "")>@p</option>
+                                    }
+                                </select>
+                                @Html.ValidationMessageFor(m => m.NewTask.Priority, "", new { @class = "text-danger small mt-1" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                @Html.LabelFor(m => m.NewTask.Status, "Status", new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.NewTask.Status, Enum.GetValues(typeof(WorkMate.Models.TaskStatus))
+                                         .Cast<WorkMate.Models.TaskStatus>()
+                                         .Select(s => new SelectListItem { Value = s.ToString(), Text = s.ToString(), Selected = (s == Model.NewTask.Status) })
+                                         , new { @class = "form-control", id = "NewStatus"})
+                                @Html.ValidationMessageFor(m => m.NewTask.Status, "", new { @class = "text-danger small mt-1" })
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end new fields -->
 
                 </div>
                 <div class="modal-footer">
@@ -201,8 +329,9 @@
         }
 
     </div>
+
 </div>
-<!--Delete confirmation modal-->
+<!-- Delete confirmation modal -->
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content shadow-lg">
@@ -221,7 +350,6 @@
                         <p class="lead mb-3">Are you sure you want to delete Task: <strong id="itemToDeleteNamePlaceholder">@Model.SelectedTask.TaskName</strong>?</p>
                         <p class="text-danger">This action cannot be undone.</p>
                         @Html.Hidden("taskId", WorkMate.Helpers.Encryptor.EncryptUrlSafe(Model.SelectedTask.TaskId.ToString()))
-
                     </div>
                 }
 
@@ -238,8 +366,6 @@
     </div>
 </div>
 
-
 @section scripts{
     <script src="~/Scripts/Task.js"></script>
 }
-

@@ -85,12 +85,16 @@
                                     <i class="fa fa-dashboard me-2 text-primary"></i>Testcases dashboard
                                 </a>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="tasks" href="@Url.Action("Index","Task")">
-                                    <i class="fa fa-tasks me-2 text-primary"></i>Tasks list
-                                </a>
-                            </li>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                            {
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item py-2 nav-submenu-item" data-nav="tasks" href="@Url.Action("Index","Task")">
+                                        <i class="fa fa-tasks me-2 text-primary"></i>Tasks list
+                                    </a>
+                                </li>
+                            }
+
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item py-2 nav-submenu-item" data-nav="createtestcase" href="@Url.Action("Create","Testcase")">
@@ -104,24 +108,32 @@
                             <i class="fa fa-clock-o me-1"></i>Track Time
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle fw-semibold nav-menu-item" data-nav="testerdev" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-user-circle-o me-1"></i>Admin pages
-                        </a>
-                        <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarDropdown">
-                            <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="tasks" href="@Url.Action("UserIndex","Admin")">
-                                    <i class="fa fa-users me-2 text-primary"></i>System users
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item py-2 nav-submenu-item" data-nav="testcases" href="@Url.Action("RoleIndex","Admin")">
-                                    <i class="fa fa-gavel me-2 text-warning"></i>System roles
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-semibold nav-menu-item" data-nav="testerdev" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user-circle-o me-1"></i>Admin pages
+                            </a>
+                            <ul class="dropdown-menu shadow border-0" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item py-2 nav-submenu-item" data-nav="tasks" href="@Url.Action("UserIndex","Admin")">
+                                        <i class="fa fa-users me-2 text-primary"></i>System users
+                                    </a>
+                                </li>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item py-2 nav-submenu-item" data-nav="testcases" href="@Url.Action("RoleIndex","Admin")">
+                                            <i class="fa fa-gavel me-2 text-warning"></i>System roles
+                                        </a>
+                                    </li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+
 
                 </ul>
                 <div class="navbar-nav">
