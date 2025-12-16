@@ -7,13 +7,13 @@ namespace WorkMate.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.1")]
-    public sealed partial class ResetBack : IMigrationMetadata
+    public sealed partial class InitialSetup01 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ResetBack));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialSetup01));
         
         string IMigrationMetadata.Id
         {
-            get { return "202510151630032_ResetBack"; }
+            get { return "202510201234393_InitialSetup01"; }
         }
         
         string IMigrationMetadata.Source

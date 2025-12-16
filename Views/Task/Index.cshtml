@@ -350,7 +350,7 @@
                         <p class="lead mb-3">Are you sure you want to delete Task: <strong id="itemToDeleteNamePlaceholder">@Model.SelectedTask.TaskName</strong>?</p>
                         <p class="text-danger">This action cannot be undone.</p>
                         @Html.Hidden("taskId", WorkMate.Helpers.Encryptor.EncryptUrlSafe(Model.SelectedTask.TaskId.ToString()))
-                    </div>
+                    </div>  
                 }
 
                 <div class="modal-footer">

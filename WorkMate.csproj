@@ -258,29 +258,9 @@
     <Compile Include="Helpers\Encryptor.cs" />
     <Compile Include="Helpers\Utility.cs" />
     <Compile Include="Interface\IExcelExportService.cs" />
-    <Compile Include="Migrations\202509131110316_IntialMigration.cs" />
-    <Compile Include="Migrations\202509131110316_IntialMigration.Designer.cs">
-      <DependentUpon>202509131110316_IntialMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202509131537306_UpdateAppUsersAndIdentitySchema.cs" />
-    <Compile Include="Migrations\202509131537306_UpdateAppUsersAndIdentitySchema.Designer.cs">
-      <DependentUpon>202509131537306_UpdateAppUsersAndIdentitySchema.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202509271429264_UpdatedSetupofAppDBContext.cs" />
-    <Compile Include="Migrations\202509271429264_UpdatedSetupofAppDBContext.Designer.cs">
-      <DependentUpon>202509271429264_UpdatedSetupofAppDBContext.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202510151630032_ResetBack.cs" />
-    <Compile Include="Migrations\202510151630032_ResetBack.Designer.cs">
-      <DependentUpon>202510151630032_ResetBack.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202510171441233_UpdatedTaskModal.cs" />
-    <Compile Include="Migrations\202510171441233_UpdatedTaskModal.Designer.cs">
-      <DependentUpon>202510171441233_UpdatedTaskModal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202510180938279_UpdatedTaskModal1.cs" />
-    <Compile Include="Migrations\202510180938279_UpdatedTaskModal1.Designer.cs">
-      <DependentUpon>202510180938279_UpdatedTaskModal1.cs</DependentUpon>
+    <Compile Include="Migrations\202510201234393_InitialSetup01.cs" />
+    <Compile Include="Migrations\202510201234393_InitialSetup01.Designer.cs">
+      <DependentUpon>202510201234393_InitialSetup01.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -399,23 +379,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202509131110316_IntialMigration.resx">
-      <DependentUpon>202509131110316_IntialMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202509131537306_UpdateAppUsersAndIdentitySchema.resx">
-      <DependentUpon>202509131537306_UpdateAppUsersAndIdentitySchema.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202509271429264_UpdatedSetupofAppDBContext.resx">
-      <DependentUpon>202509271429264_UpdatedSetupofAppDBContext.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202510151630032_ResetBack.resx">
-      <DependentUpon>202510151630032_ResetBack.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202510171441233_UpdatedTaskModal.resx">
-      <DependentUpon>202510171441233_UpdatedTaskModal.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202510180938279_UpdatedTaskModal1.resx">
-      <DependentUpon>202510180938279_UpdatedTaskModal1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202510201234393_InitialSetup01.resx">
+      <DependentUpon>202510201234393_InitialSetup01.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
